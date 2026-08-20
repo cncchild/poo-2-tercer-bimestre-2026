@@ -13,19 +13,19 @@ public class Main {
         Pedido comida = new PedidoComida(
                 1,
                 "Av. Alemania 123",
-                "Comida"
+                4
         );
 
         Pedido encomienda = new PedidoEncomienda(
                 2,
                 "Av. Los Pinos 456",
-                "Encomienda"
+                7
         );
 
         Pedido express = new PedidoExpress(
                 3,
                 "Av. Chile 789",
-                "Express"
+                8
         );
 
         Pedido[] pedidos = {
@@ -36,12 +36,18 @@ public class Main {
 
         // Polimorfismo y sobrescritura
         for (Pedido pedido : pedidos) {
-            pedido.asignarRepartidor();
+
+            pedido.mostrarResumen();
+
+            System.out.println(
+                    "Tiempo estimado: "
+                            + pedido.calcularTiempoEntrega()
+                            + " minutos"
+            );
+
+            System.out.println("----------------------");
         }
 
-        // Sobrecarga
-        comida.asignarRepartidor("Carlos");
-        encomienda.asignarRepartidor("Pedro");
-        express.asignarRepartidor("Luis Díaz");
+
     }
 }

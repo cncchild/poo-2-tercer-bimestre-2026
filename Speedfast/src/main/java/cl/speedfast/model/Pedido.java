@@ -1,23 +1,23 @@
 package cl.speedfast.model;
 
-
 /**
- * Clase base que representa un pedido de SpeedFast.
+ * Clase abstracta que representa un pedido de SpeedFast.
  *
  * Contiene la información común a los distintos
- * tipos de pedidos y define el comportamiento
- * general para asignar un repartidor.
+ * tipos de pedidos.
  */
-public class Pedido {
+public abstract class Pedido {
 
-    int idPedido;
+    private int idPedido;
     private String direccionEntrega;
-    private String tipoPedido;
+    private double distanciaKm;
 
-    public Pedido(int idPedido, String direccionEntrega, String tipoPedido) {
+    public Pedido(int idPedido, String direccionEntrega,
+                  double distanciaKm) {
+
         this.idPedido = idPedido;
         this.direccionEntrega = direccionEntrega;
-        this.tipoPedido = tipoPedido;
+        this.distanciaKm = distanciaKm;
     }
 
     public int getIdPedido() {
@@ -36,27 +36,34 @@ public class Pedido {
         this.direccionEntrega = direccionEntrega;
     }
 
-    public String getTipoPedido() {
-        return tipoPedido;
+    public double getDistanciaKm() {
+        return distanciaKm;
     }
 
-    public void setTipoPedido(String tipoPedido) {
-        this.tipoPedido = tipoPedido;
+    public void setDistanciaKm(double distanciaKm) {
+        this.distanciaKm = distanciaKm;
     }
 
     /**
-     * Método que será sobrescrito por las clases hijas
-     * según el tipo de pedido.
+     * Muestra los datos básicos del pedido.
      */
-    public void asignarRepartidor() {
-        System.out.println("Repartidor asignado automáticamente al pedido " + idPedido);
+    public void mostrarResumen() {
+
+        System.out.println("ID del pedido: " + idPedido);
+        System.out.println(
+                "Dirección de entrega: " + direccionEntrega
+        );
+        System.out.println(
+                "Distancia: " + distanciaKm + " km"
+        );
     }
 
-    public void asignarRepartidor(String nombre) {
-        System.out.println("Repartidor " + nombre
-                + " asignado al pedido " + idPedido);
-
-    }
-
-
+    /**
+     * Calcula el tiempo estimado de entrega.
+     *
+     * Cada clase hija implementa su propia lógica.
+     *
+     * @return tiempo estimado en minutos
+     */
+    public abstract int calcularTiempoEntrega();
 }
