@@ -1,28 +1,40 @@
-# Semana 1 – Programación Orientada a Objetos II
+# Semana 1 y Semana 2 – Programación Orientada a Objetos II
 
 ## Descripción
 
-Esta carpeta contiene el desarrollo de las actividades correspondientes a la **Semana 1** de la asignatura Programación Orientada a Objetos II.
+Esta carpeta contiene el desarrollo de las actividades correspondientes a la **Semana 1 y Semana 2** de la asignatura Programación Orientada a Objetos II.
 
-Durante esta semana se trabajan los conceptos iniciales y fundamentos necesarios para continuar con el desarrollo de aplicaciones utilizando el paradigma de programación orientada a objetos.
+Durante estas semanas se trabajan conceptos fundamentales de la programación orientada a objetos, aplicados al desarrollo del proyecto **SpeedFast**.
 
-## Contenido
+## Semana 1
 
-En esta actividad se aplican los conceptos estudiados durante la semana mediante ejercicios prácticos desarrollados en Java.
+Durante la Semana 1 se desarrolló la estructura inicial del proyecto SpeedFast, creando una clase base `Pedido` y tres clases derivadas:
 
-Los archivos del proyecto incluyen el código fuente, configuración del proyecto y los recursos necesarios para su ejecución.
+- `PedidoComida`
+- `PedidoEncomienda`
+- `PedidoExpress`
 
-## Tecnologías utilizadas
+Se trabajaron principalmente los conceptos de:
 
-- Java
-- IntelliJ IDEA
-- Maven
-- Git
+- Clases y objetos
+- Encapsulamiento
+- Herencia
+- Sobrescritura de métodos
+- Sobrecarga de métodos
+- Polimorfismo
 
-## Estructura
+La clase `Pedido` contenía los atributos comunes:
 
-```text
-formativa-s1/
-├── src/
-├── pom.xml
-└── README.md
+- `idPedido`
+- `direccionEntrega`
+- `tipoPedido`
+
+Además, se implementaron los métodos `asignarRepartidor()` y `asignarRepartidor(String nombre)`.
+
+## Semana 2
+
+Durante la Semana 2 se continuó con el desarrollo del proyecto SpeedFast, modificando la estructura de la Semana 1 para implementar una **clase abstracta** y una jerarquía de clases.
+
+La clase `Pedido` pasó a ser una clase abstracta:
+
+public abstract class Pedido
