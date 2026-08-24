@@ -66,20 +66,20 @@ Se incorporaron nuevas clases para separar las responsabilidades del programa:
 
 src/main/java/cl/speedfast/
 
-app/
-└── Main.java
+app
+  Main.java
 
-data/
-└── GestorPedidos.java
+data
+  GestorPedidos.java
 
-model/
-├── Pedido.java
-├── PedidoComida.java
-├── PedidoEncomienda.java
-└── PedidoExpress.java
+model
+  Pedido.java
+  PedidoComida.java
+  PedidoEncomienda.java
+  PedidoExpress.java
 
-ui/
-└── MenuPedidos.java
+ui
+  MenuPedidos.java
 
 Main
 
@@ -121,25 +121,25 @@ Organización mediante paquetes.
 Validación de datos.
 Patrón Template Method.
 Estructura del proyecto
-src/
-└── main/
-    └── java/
-        └── cl/
-            └── speedfast/
-                ├── app/
-                │   └── Main.java
-                │
-                ├── data/
-                │   └── GestorPedidos.java
-                │
-                ├── model/
-                │   ├── Pedido.java
-                │   ├── PedidoComida.java
-                │   ├── PedidoEncomienda.java
-                │   └── PedidoExpress.java
-                │
-                └── ui/
-                    └── MenuPedidos.java
+
+src
+    main
+        java
+            cl
+                speedfast
+app
+    Main.java
+data
+    GestorPedidos.java
+model
+    Pedido.java
+    PedidoComida.java
+    PedidoEncomienda.java
+    PedidoExpress.java
+ui
+    MenuPedidos.java
+
+    
 Tecnologías
 Java
 Maven
