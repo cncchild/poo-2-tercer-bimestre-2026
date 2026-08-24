@@ -16,7 +16,6 @@ public class PedidoEncomienda extends Pedido {
      * Sobrescribe la versión sobrecargada del método.
      */
 
-
     @Override
     public int calcularTiempoEntrega() {
 

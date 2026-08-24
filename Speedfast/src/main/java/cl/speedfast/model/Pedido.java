@@ -1,19 +1,15 @@
 package cl.speedfast.model;
 
-/**
- * Clase abstracta que representa un pedido de SpeedFast.
- *
- * Contiene la información común a los distintos
- * tipos de pedidos.
- */
 public abstract class Pedido {
 
     private int idPedido;
     private String direccionEntrega;
     private double distanciaKm;
 
-    public Pedido(int idPedido, String direccionEntrega,
-                  double distanciaKm) {
+    public Pedido(
+            int idPedido,
+            String direccionEntrega,
+            double distanciaKm) {
 
         this.idPedido = idPedido;
         this.direccionEntrega = direccionEntrega;
@@ -24,46 +20,61 @@ public abstract class Pedido {
         return idPedido;
     }
 
-    public void setIdPedido(int idPedido) {
-        this.idPedido = idPedido;
-    }
-
     public String getDireccionEntrega() {
         return direccionEntrega;
-    }
-
-    public void setDireccionEntrega(String direccionEntrega) {
-        this.direccionEntrega = direccionEntrega;
     }
 
     public double getDistanciaKm() {
         return distanciaKm;
     }
 
-    public void setDistanciaKm(double distanciaKm) {
-        this.distanciaKm = distanciaKm;
+    // TEMPLATE METHOD
+    public final void procesarPedido() {
+
+        mostrarResumen();
+
+        int tiempo = calcularTiempoEntrega();
+
+        mostrarTiempo(tiempo);
+
+        finalizarPedido();
     }
 
-    /**
-     * Muestra los datos básicos del pedido.
-     */
+    // Método concreto
     public void mostrarResumen() {
 
+        System.out.println("\n==============================");
         System.out.println("ID del pedido: " + idPedido);
         System.out.println(
-                "Dirección de entrega: " + direccionEntrega
+                "Dirección: " + direccionEntrega
         );
         System.out.println(
                 "Distancia: " + distanciaKm + " km"
         );
     }
 
-    /**
-     * Calcula el tiempo estimado de entrega.
-     *
-     * Cada clase hija implementa su propia lógica.
-     *
-     * @return tiempo estimado en minutos
-     */
+    // Método abstracto
     public abstract int calcularTiempoEntrega();
+
+    // Método concreto
+    private void mostrarTiempo(int tiempo) {
+
+        System.out.println(
+                "Tiempo estimado: "
+                        + tiempo
+                        + " minutos"
+        );
+    }
+
+    // Método concreto
+    private void finalizarPedido() {
+
+        System.out.println(
+                "Pedido procesado correctamente."
+        );
+
+        System.out.println(
+                "=============================="
+        );
+    }
 }

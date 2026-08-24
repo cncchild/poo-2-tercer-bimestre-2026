@@ -13,8 +13,6 @@ public class PedidoExpress extends Pedido {
         super(idPedido, direccionEntrega, distanaciaKm);
     }
 
-
-
     /**
      * Sobrescribe la versión sobrecargada del método.
      * Recibe el nombre del repartidor y realiza las

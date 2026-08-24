@@ -11,7 +11,6 @@ public class PedidoComida extends Pedido {
     public PedidoComida(int idPedido, String direccionEntrega, double distanaciaKm) {
         super(idPedido, direccionEntrega, distanaciaKm);
     }
-
     /**
      * Sobrescribe la versión sobrecargada del método.
 

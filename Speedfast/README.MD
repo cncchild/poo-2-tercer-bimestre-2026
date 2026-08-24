@@ -33,8 +33,119 @@ Además, se implementaron los métodos `asignarRepartidor()` y `asignarRepartido
 
 ## Semana 2
 
-Durante la Semana 2 se continuó con el desarrollo del proyecto SpeedFast, modificando la estructura de la Semana 1 para implementar una **clase abstracta** y una jerarquía de clases.
+Durante la Semana 2 se actualizó la estructura del proyecto para profundizar en la abstracción, herencia, polimorfismo y organización del código mediante paquetes.
 
-La clase `Pedido` pasó a ser una clase abstracta:
+Actualización de Pedido
+
+La clase Pedido pasó a ser una clase abstracta:
 
 public abstract class Pedido
+
+Se incorporó el atributo:
+
+private double distanciaKm;
+
+y el método abstracto:
+
+public abstract int calcularTiempoEntrega();
+
+De esta manera, cada tipo de pedido puede definir su propio cálculo del tiempo de entrega.
+
+También se incorporó el método procesarPedido(), que utiliza el patrón Template Method para establecer un flujo común:
+
+Mostrar resumen
+      ↓
+Calcular tiempo de entrega
+      ↓
+Mostrar tiempo
+      ↓
+Finalizar pedido
+Nuevas clases y organización
+
+Se incorporaron nuevas clases para separar las responsabilidades del programa:
+
+cl.speedfast
+│
+├── app
+│   └── Main
+│
+├── data
+│   └── GestorPedidos
+│
+├── model
+│   ├── Pedido
+│   ├── PedidoComida
+│   ├── PedidoEncomienda
+│   └── PedidoExpress
+│
+└── ui
+    └── MenuPedidos
+Main
+
+La clase Main quedó encargada de iniciar la aplicación mediante MenuPedidos:
+
+MenuPedidos menu = new MenuPedidos();
+menu.iniciar();
+MenuPedidos
+
+Se creó un menú de consola que permite:
+
+Registrar pedidos de comida.
+Registrar pedidos de encomienda.
+Registrar pedidos express.
+Ingresar ID, dirección y distancia.
+Validar los datos ingresados.
+Salir del sistema.
+GestorPedidos
+
+La clase GestorPedidos centraliza el registro de los pedidos y utiliza polimorfismo mediante una referencia de tipo Pedido.
+
+Según la opción seleccionada, crea un objeto de:
+
+PedidoComida
+PedidoEncomienda
+PedidoExpress
+
+y posteriormente ejecuta las operaciones definidas en la clase abstracta Pedido.
+
+Conceptos incorporados en Semana 2
+Clase abstracta.
+Método abstracto.
+Herencia.
+Polimorfismo.
+Sobrescritura.
+Encapsulamiento.
+Separación de responsabilidades.
+Organización mediante paquetes.
+Validación de datos.
+Patrón Template Method.
+Estructura del proyecto
+src/
+└── main/
+    └── java/
+        └── cl/
+            └── speedfast/
+                ├── app/
+                │   └── Main.java
+                │
+                ├── data/
+                │   └── GestorPedidos.java
+                │
+                ├── model/
+                │   ├── Pedido.java
+                │   ├── PedidoComida.java
+                │   ├── PedidoEncomienda.java
+                │   └── PedidoExpress.java
+                │
+                └── ui/
+                    └── MenuPedidos.java
+Tecnologías
+Java
+Maven
+NetBeans IDE
+Programación Orientada a Objetos
+Autor
+
+Cristian Contreras
+
+Duoc UC — 2026
