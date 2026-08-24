@@ -64,22 +64,23 @@ Nuevas clases y organización
 
 Se incorporaron nuevas clases para separar las responsabilidades del programa:
 
-cl.speedfast
-│
-├── app
-│   └── Main
-│
-├── data
-│   └── GestorPedidos
-│
-├── model
-│   ├── Pedido
-│   ├── PedidoComida
-│   ├── PedidoEncomienda
-│   └── PedidoExpress
-│
-└── ui
-    └── MenuPedidos
+src/main/java/cl/speedfast/
+
+app/
+└── Main.java
+
+data/
+└── GestorPedidos.java
+
+model/
+├── Pedido.java
+├── PedidoComida.java
+├── PedidoEncomienda.java
+└── PedidoExpress.java
+
+ui/
+└── MenuPedidos.java
+
 Main
 
 La clase Main quedó encargada de iniciar la aplicación mediante MenuPedidos:
