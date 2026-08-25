@@ -62,25 +62,24 @@ Mostrar tiempo
 Finalizar pedido
 Nuevas clases y organización
 
-Se incorporaron nuevas clases para separar las responsabilidades del programa:
-
-src/main/java/cl/speedfast/
-
-app
-  Main.java
-
-data
-  GestorPedidos.java
-
-model
-  Pedido.java
-  PedidoComida.java
-  PedidoEncomienda.java
-  PedidoExpress.java
-
-ui
-  MenuPedidos.java
-
+```text
+cl.speedfast
+│
+├── app
+│   └── Main
+│
+├── data
+│   └── GestorPedidos
+│
+├── model
+│   ├── Pedido
+│   ├── PedidoComida
+│   ├── PedidoEncomienda
+│   └── PedidoExpress
+│
+└── ui
+    └── MenuPedidos
+```
 Main
 
 La clase Main quedó encargada de iniciar la aplicación mediante MenuPedidos:
@@ -122,24 +121,27 @@ Validación de datos.
 Patrón Template Method.
 Estructura del proyecto
 
-src
-    main
-        java
-            cl
-                speedfast
-app
-    Main.java
-data
-    GestorPedidos.java
-model
-    Pedido.java
-    PedidoComida.java
-    PedidoEncomienda.java
-    PedidoExpress.java
-ui
-    MenuPedidos.java
-
-    
+```text
+src/
+└── main/
+    └── java/
+        └── cl/
+            └── speedfast/
+                ├── app/
+                │   └── Main.java
+                │
+                ├── data/
+                │   └── GestorPedidos.java
+                │
+                ├── model/
+                │   ├── Pedido.java
+                │   ├── PedidoComida.java
+                │   ├── PedidoEncomienda.java
+                │   └── PedidoExpress.java
+                │
+                └── ui/
+                    └── MenuPedidos.java
+```
 Tecnologías
 Java
 Maven
