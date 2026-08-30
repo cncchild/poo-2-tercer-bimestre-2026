@@ -1,27 +1,67 @@
 package cl.speedfast.model;
 
 /**
- * Representa un pedido de tipo Compra Express.
+ * Representa un pedido de tipo Express dentro del sistema SpeedFast.
  *
- * Hereda de la clase Pedido y sobrescribe los métodos
- * asignarRepartidor() para aplicar la lógica específica
- * de este tipo de servicio.
+ * Hereda los atributos y comportamientos comunes de la clase
+ * abstracta Pedido y define reglas específicas para la asignación
+ * del repartidor y el cálculo del tiempo de entrega.
+ *
+ * @author Cristian Contreras
+ * @version 1.0
  */
 public class PedidoExpress extends Pedido {
 
-    public PedidoExpress(int idPedido, String direccionEntrega, double distanaciaKm) {
+    /**
+     * Constructor de PedidoExpress.
+     *
+     * @param idPedido identificador del pedido
+     * @param direccionEntrega dirección donde se realizará la entrega
+     * @param distanaciaKm distancia de entrega en kilómetros
+     */
+    public PedidoExpress(
+            int idPedido,
+            String direccionEntrega,
+            double distanaciaKm) {
+
         super(idPedido, direccionEntrega, distanaciaKm);
     }
 
     /**
-     * Sobrescribe la versión sobrecargada del método.
-     * Recibe el nombre del repartidor y realiza las
-     * validaciones propias de una compra Express.
+     * Obtiene el tipo de pedido.
      *
+     * @return nombre del tipo de pedido
      */
+    @Override
+    public String obtenerTipoPedido() {
+        return "Pedido Express";
+    }
 
+    /**
+     * Asigna automáticamente un repartidor para el pedido Express.
+     *
+     * En este tipo de pedido se asigna directamente un repartidor
+     * específico para realizar la entrega.
+     */
+    @Override
+    public void asignarRepartidor() {
 
+        setRepartidor("Cristian Contreras");
 
+        System.out.println(
+                "Repartidor asignado Express: "
+                        + getRepartidor()
+        );
+    }
+
+    /**
+     * Calcula el tiempo estimado de entrega para un pedido Express.
+     *
+     * Se establece un tiempo base de 10 minutos. Si la distancia
+     * supera los 5 kilómetros, se agregan 5 minutos adicionales.
+     *
+     * @return tiempo estimado de entrega en minutos
+     */
     @Override
     public int calcularTiempoEntrega() {
 

@@ -8,7 +8,7 @@ En este repositorio se almacenan las actividades, ejercicios formativos y evalua
 
 - Semana 1: Aplicando polimorfismo en modelado de clases - formativa-1.
 - Semana 2: Diseñando Jerarquías con Clases Abstractas - formativa -2.
-- Semana 3: Actividades y ejercicios formativos.
+- Semana 3: Integrando Abstracción, Polimorfismo y Desacoplamiento Sumativa -1.
 - Semana 4: Actividades y ejercicios formativos.
 - Semana 5: Actividades y ejercicios formativos.
 - Semana 6: Actividades y ejercicios formativos.

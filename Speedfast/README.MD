@@ -1,4 +1,4 @@
-# Semana 1 y Semana 2 – Programación Orientada a Objetos II
+# Semana 1 a 3 – Programación Orientada a Objetos II
 
 ## Descripción
 
@@ -147,7 +147,195 @@ Java
 Maven
 NetBeans IDE
 Programación Orientada a Objetos
-Autor
+
+## Semana 3
+
+Durante la Semana 3 se amplió el sistema **SpeedFast**, incorporando nuevas funcionalidades y profundizando en el uso de interfaces, colecciones, polimorfismo y separación de responsabilidades.
+
+### Interfaces
+
+Se incorporaron tres interfaces para definir comportamientos específicos de los pedidos:
+
+* `Despachable`
+* `Cancelable`
+* `Rastreable`
+
+La clase abstracta `Pedido` implementa estas interfaces:
+
+```java
+public abstract class Pedido
+        implements Despachable, Cancelable, Rastreable
+```
+
+Cada interfaz representa una responsabilidad:
+
+* `Despachable`: permite despachar un pedido.
+* `Cancelable`: permite cancelar un pedido.
+* `Rastreable`: permite consultar el historial de pedidos.
+
+### Historial de pedidos
+
+Se creó la clase `HistorialPedidos`, encargada de almacenar los pedidos registrados mediante una colección genérica `List<Pedido>`.
+
+```java
+private List<Pedido> historial;
+```
+
+La clase permite:
+
+* Agregar pedidos.
+* Buscar pedidos mediante su ID.
+* Mostrar el historial de pedidos.
+
+Esto permite mantener separada la gestión del historial de la lógica principal de los pedidos.
+
+### Gestión de estados
+
+Se incorporó el atributo `estado` en la clase `Pedido` para representar el ciclo de vida de cada pedido.
+
+Los estados utilizados son:
+
+* `EN PREPARACIÓN`
+* `EN RUTA`
+* `ENTREGADO`
+* `CANCELADO`
+
+El flujo principal del pedido es:
+
+```text
+EN PREPARACIÓN
+       ↓
+    EN RUTA
+       ↓
+   ENTREGADO
+```
+
+También se incorporaron validaciones para evitar cambios de estado incorrectos.
+
+Por ejemplo, un pedido que ya se encuentra `EN RUTA` o `ENTREGADO` no puede ser cancelado.
+
+### Asignación de repartidores
+
+Cada tipo de pedido implementa su propia lógica de asignación de repartidor mediante sobrescritura del método:
+
+```java
+public abstract void asignarRepartidor();
+```
+
+Por ejemplo:
+
+* `PedidoComida` asigna repartidores según la distancia.
+* `PedidoEncomienda` utiliza una lógica diferente según los kilómetros.
+* `PedidoExpress` utiliza un repartidor específico.
+
+El repartidor asignado se almacena en el atributo:
+
+```java
+private String repartidor;
+```
+
+### Búsqueda de pedidos
+
+Se incorporó la opción de buscar un pedido mediante su ID desde el menú principal.
+
+El usuario puede ingresar el identificador y el sistema consulta el historial para encontrar el pedido correspondiente.
+
+### Cancelación de pedidos
+
+Se incorporó la posibilidad de cancelar pedidos desde el menú.
+
+Antes de realizar la cancelación, el sistema verifica el estado actual del pedido, evitando cancelar pedidos que ya fueron entregados o que se encuentran en ruta.
+
+### Actualización del menú
+
+El menú principal de SpeedFast fue ampliado para incorporar nuevas funcionalidades:
+
+```text
+1. Registrar pedido de comida
+2. Registrar pedido de encomienda
+3. Registrar pedido express
+4. Ver historial de pedidos
+5. Cancelar pedido
+6. Buscar pedido
+7. Marcar pedido en ruta
+8. Marcar pedido como entregado
+9. Salir
+```
+
+### Estructura actual del proyecto
+
+```text
+src/
+└── main/
+    └── java/
+        └── cl/
+            └── speedfast/
+                ├── app/
+                │   └── Main.java
+                │
+                ├── data/
+                │   ├── GestorPedidos.java
+                │   └── HistorialPedidos.java
+                │
+                ├── interfaces/
+                │   ├── Despachable.java
+                │   ├── Cancelable.java
+                │   └── Rastreable.java
+                │
+                ├── model/
+                │   ├── Pedido.java
+                │   ├── PedidoComida.java
+                │   ├── PedidoEncomienda.java
+                │   └── PedidoExpress.java
+                │
+                └── ui/
+                    └── MenuPedidos.java
+```
+
+### Conceptos incorporados en Semana 3
+
+* Interfaces.
+* Implementación mediante `implements`.
+* Polimorfismo.
+* Sobrescritura de métodos.
+* Colecciones genéricas.
+* `ArrayList`.
+* Separación de responsabilidades.
+* Gestión de estados.
+* Validación de reglas de negocio.
+* Búsqueda de objetos.
+* Gestión de historial.
+* Encapsulamiento.
+* Herencia.
+* Abstracción.
+
+### Evolución del proyecto
+
+```text
+Semana 1
+   ↓
+Clases, objetos, encapsulamiento,
+herencia, sobrecarga y polimorfismo
+   ↓
+Semana 2
+   ↓
+Abstracción, métodos abstractos,
+Template Method y organización por paquetes
+   ↓
+Semana 3
+   ↓
+Interfaces, colecciones, historial,
+búsqueda, estados y reglas de negocio
+```
+
+**Tecnologías**
+
+* Java
+* Maven
+* NetBeans IDE
+* Programación Orientada a Objetos
+
+**Autor**
 
 Cristian Contreras
 
