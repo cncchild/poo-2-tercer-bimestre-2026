@@ -1,4 +1,4 @@
-# Semana 1 a 4 – Programación Orientada a Objetos II
+# Semana 1 a 5 – Programación Orientada a Objetos II
 
 ## Descripción
 
@@ -545,6 +545,345 @@ ExecutorService y procesamiento paralelo
 * Concurrencia y programación con hilos
 
 ```
+
+
+## Semana 5
+
+Durante la Semana 5 se amplió el sistema **SpeedFast** incorporando **sincronización de procesos concurrentes**, permitiendo que varios repartidores trabajen simultáneamente sobre una zona de carga compartida.
+
+El objetivo principal fue controlar el acceso concurrente a los pedidos para evitar que dos repartidores retiren el mismo pedido al mismo tiempo.
+
+### Zona de carga compartida
+
+Se creó la clase `ZonaDeCarga`, ubicada en el paquete `data`.
+
+Esta clase representa el recurso compartido entre los distintos repartidores y almacena los pedidos pendientes mediante una colección `List<Pedido>`.
+
+```java
+private List<Pedido> pedidos;
+```
+
+La zona de carga permite:
+
+* Agregar pedidos.
+* Retirar pedidos pendientes.
+* Eliminar pedidos cancelados.
+* Consultar si está vacía.
+* Mostrar los pedidos disponibles.
+
+### Sincronización
+
+Para proteger el acceso concurrente a la lista de pedidos se utilizaron métodos `synchronized`.
+
+```java
+public synchronized void agregarPedido(Pedido pedido)
+```
+
+y
+
+```java
+public synchronized Pedido retirarPedido()
+```
+
+La sincronización permite que solamente un hilo a la vez pueda modificar la zona de carga.
+
+Al retirar un pedido, este se elimina inmediatamente de la colección antes de ser procesado por el repartidor.
+
+De esta manera se evita que otro hilo pueda retirar nuevamente el mismo pedido.
+
+El flujo es:
+
+```text
+Pedido PENDIENTE
+       ↓
+Zona de carga
+       ↓
+Repartidor retira el pedido
+       ↓
+Pedido eliminado de la zona
+       ↓
+EN_REPARTO
+       ↓
+Procesamiento de la entrega
+       ↓
+ENTREGADO
+```
+
+### Repartidor
+
+La clase `Repartidor` implementa la interfaz:
+
+```java
+public class Repartidor implements Runnable
+```
+
+Cada repartidor recibe una referencia a la misma instancia de `ZonaDeCarga`.
+
+```java
+private String nombre;
+private ZonaDeCarga zonaDeCarga;
+```
+
+Esto permite que varios repartidores trabajen sobre un recurso compartido.
+
+Dentro del método `run()`, cada repartidor intenta retirar un pedido de la zona de carga.
+
+```text
+Retirar pedido
+      ↓
+¿Existe pedido?
+   ↓          ↓
+  Sí          No
+   ↓           ↓
+EN_REPARTO   Finalizar
+   ↓
+Simular entrega
+   ↓
+ENTREGADO
+```
+
+Si no existen pedidos pendientes, el repartidor finaliza su ejecución.
+
+### Ejecución concurrente
+
+Para administrar los hilos se utiliza `ExecutorService` con un pool de tres hilos:
+
+```java
+ExecutorService executor =
+        Executors.newFixedThreadPool(3);
+```
+
+Se ejecutan tres repartidores:
+
+```text
+Juan
+Camila
+Pedro
+```
+
+Los tres utilizan la misma zona de carga.
+
+```text
+                 Zona de Carga
+                /      |       \
+               /       |        \
+           Juan      Camila     Pedro
+            ↓          ↓          ↓
+         Pedido      Pedido     Pedido
+```
+
+Cada repartidor puede retirar y procesar distintos pedidos de manera concurrente.
+
+### Simulación de las entregas
+
+Para representar el tiempo de procesamiento de cada entrega se utiliza:
+
+```java
+Thread.sleep(tiempoEspera);
+```
+
+El tiempo de espera se genera aleatoriamente:
+
+```java
+int tiempoEspera =
+        1000 + (int) (Math.random() * 3000);
+```
+
+Esto permite observar cómo los repartidores avanzan a diferentes velocidades y cómo sus mensajes aparecen intercalados en la consola.
+
+### Finalización de los procesos
+
+Una vez enviadas las tareas al `ExecutorService`, se utiliza:
+
+```java
+executor.shutdown();
+```
+
+para indicar que no se agregarán nuevas tareas.
+
+Posteriormente:
+
+```java
+executor.awaitTermination(
+        1,
+        TimeUnit.MINUTES
+);
+```
+
+permite esperar la finalización de los repartidores.
+
+También se controla `InterruptedException`, restaurando el estado de interrupción del hilo cuando corresponde.
+
+### Prueba de concurrencia
+
+Para comprobar el funcionamiento se registraron varios pedidos y posteriormente se ejecutaron tres repartidores.
+
+Un ejemplo de la ejecución obtenida es:
+
+```text
+[Repartidor - Juan] Retirando pedido #1...
+[Repartidor - Camila] Retirando pedido #2...
+[Repartidor - Pedro] Retirando pedido #3...
+
+[Repartidor - Pedro] Estado: EN_REPARTO
+[Repartidor - Juan] Estado: EN_REPARTO
+[Repartidor - Camila] Estado: EN_REPARTO
+
+[Repartidor - Camila] Entregando pedido #2...
+
+[Repartidor - Juan] Estado: ENTREGADO
+
+[Repartidor - Camila] Retirando pedido #5...
+```
+
+El orden de los mensajes puede variar en cada ejecución debido al funcionamiento de los hilos.
+
+La prueba permite comprobar que:
+
+* Existen varios hilos trabajando simultáneamente.
+* Los repartidores comparten la misma zona de carga.
+* Un pedido no es retirado dos veces.
+* Los pedidos cambian correctamente de estado.
+* Los repartidores pueden procesar más de un pedido.
+* La zona de carga queda vacía cuando todos los pedidos fueron procesados.
+
+### Control de errores de concurrencia
+
+La sincronización de `ZonaDeCarga` evita conflictos entre los repartidores.
+
+El método `retirarPedido()` busca solamente pedidos en estado `PENDIENTE` y elimina el pedido dentro del mismo bloque sincronizado.
+
+Además, cuando no existen pedidos disponibles, el método retorna `null` y el repartidor finaliza su ejecución.
+
+Esto evita ciclos infinitos y accesos incorrectos al recurso compartido.
+
+### Conceptos incorporados en Semana 5
+
+* Concurrencia.
+* Sincronización.
+* Métodos `synchronized`.
+* Recursos compartidos.
+* Interfaz `Runnable`.
+* `ExecutorService`.
+* `Executors.newFixedThreadPool()`.
+* `shutdown()`.
+* `awaitTermination()`.
+* `InterruptedException`.
+* Control de acceso a colecciones.
+* Procesamiento concurrente.
+* Estados de los pedidos.
+* Simulación de tiempos de procesamiento.
+* Control de errores de concurrencia.
+
+### Estructura actual del proyecto
+
+```text
+src/
+
+└── main/
+
+    └── java/
+
+        └── cl/
+
+            └── speedfast/
+
+                ├── app/
+
+                │   └── Main.java
+
+                │
+
+                ├── data/
+
+                │   ├── GestorPedidos.java
+
+                │   ├── HistorialPedidos.java
+
+                │   └── ZonaDeCarga.java
+
+                │
+
+                ├── interfaces/
+
+                │   ├── Despachable.java
+
+                │   ├── Cancelable.java
+
+                │   └── Rastreable.java
+
+                │
+
+                ├── model/
+
+                │   ├── Pedido.java
+
+                │   ├── PedidoComida.java
+
+                │   ├── PedidoEncomienda.java
+
+                │   ├── PedidoExpress.java
+
+                │   ├── EstadoPedido.java
+
+                │   └── Repartidor.java
+
+                │
+
+                └── ui/
+
+                    └── MenuPedidos.java
+```
+
+### Evolución del proyecto
+
+```text
+Semana 1
+
+   ↓
+
+Clases, objetos, encapsulamiento,
+herencia, sobrecarga y polimorfismo
+
+   ↓
+
+Semana 2
+
+   ↓
+
+Abstracción, métodos abstractos,
+Template Method y organización por paquetes
+
+   ↓
+
+Semana 3
+
+   ↓
+
+Interfaces, colecciones, historial,
+búsqueda, estados y reglas de negocio
+
+   ↓
+
+Semana 4
+
+   ↓
+
+Concurrencia, hilos, Runnable,
+ExecutorService y procesamiento paralelo
+
+   ↓
+
+Semana 5
+
+   ↓
+
+Sincronización de procesos,
+recursos compartidos, synchronized,
+control de concurrencia y
+procesamiento seguro de pedidos
+```
+
 
 **Autor**
 
