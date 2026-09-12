@@ -24,7 +24,7 @@ public abstract class Pedido
     private String direccionEntrega;
     private double distanciaKm;
     private String repartidor;
-    private String estado = "EN PREPARACION";
+    private EstadoPedido estado;
 
     /**
      * Constructor de la clase Pedido.
@@ -42,7 +42,7 @@ public abstract class Pedido
         this.direccionEntrega = direccionEntrega;
         this.distanciaKm = distanciaKm;
         this.repartidor = null;
-        this.estado = "EN PREPARACION";
+        this.estado = EstadoPedido.PENDIENTE;
     }
 
     /**
@@ -91,16 +91,16 @@ public abstract class Pedido
     }
 
     /**
-     * Permite ver el estado del pedido.
+     * Obtiene el estado actual del pedido.
      *
-     * @param estado del pedido
+     * @return estado actual del pedido
      */
-    public String getEstado() {
+    public EstadoPedido getEstado() {
         return estado;
     }
 
-    protected void setEstado(String estado) {
-        this.estado = estado;
+    public void setEstado(EstadoPedido nuevoEstado) {
+        this.estado = nuevoEstado;
     }
     /**
      * Template Method que define el flujo general
@@ -140,11 +140,6 @@ public abstract class Pedido
     public void asignarRepartidor(String nombre) {
 
         setRepartidor(nombre);
-
-        System.out.println(
-                "Repartidor asignado manualmente: "
-                        + nombre
-        );
     }
 
     /**
@@ -155,7 +150,7 @@ public abstract class Pedido
     @Override
     public void despachar() {
 
-        estado = "ENTREGADO";
+        estado = EstadoPedido.ENTREGADO;
 
         System.out.println(
                 "Pedido despachado correctamente."
@@ -171,16 +166,16 @@ public abstract class Pedido
     @Override
     public void cancelar() {
 
-        if (estado.equals("EN RUTA")) {
+        if (estado == EstadoPedido.EN_REPARTO) {
 
             System.out.println(
-                    "[ERROR] El pedido ya está en ruta y no puede cancelarse."
+                    "[ERROR] El pedido ya está en reparto y no puede cancelarse."
             );
 
             return;
         }
 
-        if (estado.equals("ENTREGADO")) {
+        if (estado == EstadoPedido.ENTREGADO) {
 
             System.out.println(
                     "[ERROR] El pedido ya fue entregado y no puede cancelarse."
@@ -189,19 +184,17 @@ public abstract class Pedido
             return;
         }
 
-        if (estado.equals("CANCELADO")) {
-
+        if (estado == EstadoPedido.CANCELADO) {
             System.out.println(
-                    "[ERROR] El pedido ya se encuentra cancelado."
+                    "[ERROR] El pedido ya está cancelado."
             );
-
             return;
         }
 
-        estado = "CANCELADO";
+        estado = EstadoPedido.CANCELADO;
 
         System.out.println(
-                "Pedido cancelado exitosamente."
+                "Pedido #" + idPedido + " cancelado correctamente."
         );
     }
 
@@ -274,22 +267,14 @@ public abstract class Pedido
                         + " minutos"
         );
     }
-    public void marcarEnRuta() {
+    public void marcarEnReparto() {
 
-        estado = "EN RUTA";
-
-        System.out.println(
-                "Pedido marcado como EN RUTA."
-        );
-    }
+        estado = EstadoPedido.EN_REPARTO;
+        }
 
     public void marcarEntregado() {
 
-        estado = "ENTREGADO";
-
-        System.out.println(
-                "Pedido marcado como ENTREGADO."
-        );
+        estado = EstadoPedido.ENTREGADO;
     }
     /**
      * Finaliza el procesamiento del pedido.
@@ -299,5 +284,14 @@ public abstract class Pedido
                 "Gracias por su preferencia."
         );
     }
-
+    @Override
+    public String toString() {
+        return "Pedido{" +
+                "idPedido=" + idPedido +
+                ", direccionEntrega='" + direccionEntrega + '\'' +
+                ", distanciaKm=" + distanciaKm +
+                ", repartidor='" + repartidor + '\'' +
+                ", estado=" + estado +
+                '}';
+    }
 }

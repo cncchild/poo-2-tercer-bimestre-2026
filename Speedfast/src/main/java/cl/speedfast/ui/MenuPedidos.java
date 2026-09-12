@@ -53,39 +53,47 @@ public class MenuPedidos {
                     "Seleccione una opción: "
             );
 
-            if (opcion >= 1 && opcion <= 3) {
+            switch (opcion) {
 
-                registrarPedido(opcion);
+                // CLIENTE
+                case 1:
+                    crearPedido();
+                    break;
 
-            } else if (opcion == 4) {
+                case 2:
+                    consultarPedido();
+                    break;
 
-                gestorPedidos.mostrarHistorial();
+                case 3:
+                    misPedidos();
+                    break;
 
-            } else if (opcion == 5) {
+                case 4:
+                    cancelarPedido();
+                    break;
 
-                cancelarPedido();
+                // REPARTIDOR
+                case 5:
+                    gestorPedidos.mostrarZonaDeCarga();
+                    break;
 
-            } else if (opcion == 6) {
+                case 6:
 
-                buscarPedido();
+                     gestorPedidos.procesarPedidos();
 
-            } else if (opcion == 7) {
+                    break;
 
-                marcarEnRuta();
+                // SISTEMA
+                case 7:
+                    gestorPedidos.mostrarHistorial();
+                    break;
 
-            } else if (opcion == 8) {
+                case 0:
+                    continuar = false;
+                    break;
 
-                marcarEntregado();
-
-            } else if (opcion == 9) {
-
-                continuar = false;
-
-            } else {
-
-                mostrarError(
-                        "Opción no válida."
-                );
+                default:
+                    mostrarError("Opción no válida.");
             }
         }
 
@@ -99,22 +107,78 @@ public class MenuPedidos {
      */
     private void mostrarMenu() {
 
-        System.out.println("\n================================");
-        System.out.println("          SPEEDFAST");
-        System.out.println("       GESTIÓN DE PEDIDOS");
-        System.out.println("================================");
-        System.out.println("1. Registrar pedido de comida");
-        System.out.println("2. Registrar pedido de encomienda");
-        System.out.println("3. Registrar pedido express");
-        System.out.println("4. Ver historial de pedidos");
-        System.out.println("5. Cancelar pedido");
-        System.out.println("6. Buscar pedido");
-        System.out.println("7. Marcar pedido en ruta");
-        System.out.println("8. Marcar pedido como entregado");
-        System.out.println("9. Salir");
-        System.out.println("================================");
-    }
+        System.out.println("\n========================================");
+        System.out.println("              SPEEDFAST");
+        System.out.println("        SISTEMA DE DELIVERY");
+        System.out.println("========================================");
 
+        System.out.println("\nCLIENTE");
+        System.out.println("1. Crear pedido");
+        System.out.println("2. Consultar pedido");
+        System.out.println("3. Mis pedidos");
+        System.out.println("4. Cancelar pedido");
+
+        System.out.println("\nREPARTIDOR");
+        System.out.println("5. Ver zona de carga");
+        System.out.println("6. Procesar pedidos");
+
+        System.out.println("\nSISTEMA");
+        System.out.println("7. Ver historial");
+
+        System.out.println("\n0. Salir");
+
+        System.out.println("========================================");
+    }
+    /**
+    /*cliente
+     */
+    private void crearPedido() {
+
+        System.out.println("\n================================");
+        System.out.println("         CREAR PEDIDO");
+        System.out.println("================================");
+
+        System.out.println("1. Pedido de comida");
+        System.out.println("2. Pedido de encomienda");
+        System.out.println("3. Pedido express");
+
+        int tipo = leerEntero(
+                "Seleccione el tipo de pedido: "
+        );
+
+        if (tipo < 1 || tipo > 3) {
+            mostrarError("Tipo de pedido no válido.");
+            return;
+        }
+
+        registrarPedido(tipo);
+    }
+    /**
+     /*cliente consulta pedido tipo
+     */
+    private void consultarPedido() {
+
+        System.out.println("\n================================");
+        System.out.println("       CONSULTAR PEDIDO");
+        System.out.println("================================");
+
+        int id = leerEntero(
+                "Ingrese ID del pedido: "
+        );
+
+        gestorPedidos.buscarPedido(id);
+    }
+    /**
+     * cliente  ve sus pedios creados
+     */
+    private void misPedidos() {
+
+        System.out.println("\n================================");
+        System.out.println("          MIS PEDIDOS");
+        System.out.println("================================");
+
+        gestorPedidos.mostrarHistorial();
+    }
     /**
      * Solicita al usuario los datos necesarios para registrar
      * un pedido y los envía al gestor de pedidos.

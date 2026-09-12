@@ -1,9 +1,13 @@
 package cl.speedfast.data;
-
+import cl.speedfast.model.Repartidor;
 import cl.speedfast.model.Pedido;
 import cl.speedfast.model.PedidoComida;
 import cl.speedfast.model.PedidoEncomienda;
 import cl.speedfast.model.PedidoExpress;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
+import cl.speedfast.model.EstadoPedido;
 
 /**
  * Gestiona las operaciones principales relacionadas con los pedidos
@@ -18,6 +22,7 @@ import cl.speedfast.model.PedidoExpress;
 public class GestorPedidos {
 
     private HistorialPedidos historialPedidos;
+    private ZonaDeCarga zonaDeCarga;
 
     /**
      * Constructor de la clase GestorPedidos.
@@ -27,6 +32,7 @@ public class GestorPedidos {
      */
     public GestorPedidos() {
         historialPedidos = new HistorialPedidos();
+        zonaDeCarga = new ZonaDeCarga();
     }
 
     /**
@@ -64,8 +70,8 @@ public class GestorPedidos {
 
         // Guardar pedido en el historial
         historialPedidos.agregarPedido(pedido);
-
-        mostrarResultado(pedido);
+        // Agregar pedido a la zona de carga
+        zonaDeCarga.agregarPedido(pedido);
     }
 
     /**
@@ -113,7 +119,20 @@ public class GestorPedidos {
                 return null;
         }
     }
+    /**
+     * Muestra los pedidos que se encuentran actualmente
+     * en la zona de carga.
+     */
+    public void mostrarZonaDeCarga() {
 
+        System.out.println("\n================================");
+        System.out.println("         ZONA DE CARGA");
+        System.out.println("================================");
+
+       zonaDeCarga.mostrarPedidos();
+
+
+    }
     /**
      * Procesa el pedido utilizando el Template Method
      * definido en la clase abstracta Pedido.
@@ -145,6 +164,9 @@ public class GestorPedidos {
         }
 
         pedido.cancelar();
+        if (pedido.getEstado() == EstadoPedido.CANCELADO) {
+            zonaDeCarga.eliminarPedido(id);
+        }
     }
 
     /**
@@ -196,7 +218,7 @@ public class GestorPedidos {
             return;
         }
 
-        pedido.marcarEnRuta();
+        pedido.marcarEnReparto();
     }
     
     public void entregarPedido(int id) {
@@ -213,5 +235,72 @@ public class GestorPedidos {
         }
 
         pedido.marcarEntregado();
+    }
+    /**
+     * Procesa los pedidos pendientes de la zona de carga
+     * utilizando tres repartidores en paralelo.
+     */
+    public void procesarPedidos() {
+
+        if (zonaDeCarga.estaVacia()) {
+
+            System.out.println(
+                    "\n[INFO] No hay pedidos pendientes en la zona de carga."
+            );
+
+            return;
+        }
+
+        System.out.println(
+                "\n================================"
+        );
+        System.out.println(
+                "       PROCESANDO PEDIDOS"
+        );
+        System.out.println(
+                "================================"
+        );
+
+        ExecutorService executor =
+                Executors.newFixedThreadPool(3);
+
+        executor.execute(
+                new Repartidor("Juan", zonaDeCarga)
+        );
+
+        executor.execute(
+                new Repartidor("Camila", zonaDeCarga)
+        );
+
+        executor.execute(
+                new Repartidor("Pedro", zonaDeCarga)
+        );
+
+        executor.shutdown();
+
+        try {
+
+            if (!executor.awaitTermination(
+                    1,
+                    TimeUnit.MINUTES)) {
+
+                executor.shutdownNow();
+            }
+
+        } catch (InterruptedException e) {
+
+            executor.shutdownNow();
+            Thread.currentThread().interrupt();
+        }
+
+        System.out.println(
+                "\n================================"
+        );
+        System.out.println(
+                "       [Zona de carga vacia]"
+        );
+        System.out.println(
+                "================================"
+        );
     }
 }

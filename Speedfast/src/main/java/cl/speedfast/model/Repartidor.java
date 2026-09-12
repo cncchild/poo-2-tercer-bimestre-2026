@@ -1,6 +1,6 @@
 package cl.speedfast.model;
+import cl.speedfast.data.ZonaDeCarga;
 
-import java.util.List;
 
 /**
  * Representa un repartidor de SpeedFast.
@@ -14,17 +14,18 @@ import java.util.List;
 public class Repartidor implements Runnable {
 
     private String nombre;
-    private List<Pedido> pedidos;
+    private ZonaDeCarga zonaDeCarga;
 
     /**
      * Constructor de Repartidor.
      *
      * @param nombre nombre del repartidor
-     * @param pedidos lista de pedidos asignados
+     * @param zonaDeCarga lista de pedidos asignados
      */
-    public Repartidor(String nombre, List<Pedido> pedidos) {
+    public Repartidor(String nombre, ZonaDeCarga zonaDeCarga) {
+
         this.nombre = nombre;
-        this.pedidos = pedidos;
+        this.zonaDeCarga = zonaDeCarga;
     }
 
     /**
@@ -36,14 +37,7 @@ public class Repartidor implements Runnable {
         return nombre;
     }
 
-    /**
-     * Obtiene la lista de pedidos asignados.
-     *
-     * @return lista de pedidos
-     */
-    public List<Pedido> getPedidos() {
-        return pedidos;
-    }
+
 
     /**
      * Ejecuta las entregas asignadas al repartidor.
@@ -51,30 +45,35 @@ public class Repartidor implements Runnable {
     @Override
     public void run() {
 
-        System.out.println(
-                "\n[" + nombre + "] Comenzó sus entregas."
-        );
+          while (true) {
 
-        for (Pedido pedido : pedidos) {
+            Pedido pedido = zonaDeCarga.retirarPedido();
 
-            System.out.println(
-                    "[" + nombre + "] Procesando pedido #"
-                            + pedido.getIdPedido()
-            );
+            if (pedido == null) {
+                break;
+            }
+              System.out.println(
+                      "\n[Repartidor - " + nombre + "] Retirando pedido #"
+                              + pedido.getIdPedido() + "..."
+              );
 
             pedido.asignarRepartidor(nombre);
 
-            pedido.marcarEnRuta();
+            pedido.marcarEnReparto();
+
+              System.out.println(
+                      "[Repartidor - " + nombre + "] Estado: "
+                              + pedido.getEstado()
+              );
 
             try {
 
                 int tiempoEspera =
                         1000 + (int) (Math.random() * 3000);
-
                 System.out.println(
-                        "[" + nombre + "] Entregando pedido #"
-                                + pedido.getIdPedido()
-                                + "..."
+                        "\n[Repartidor - " + nombre
+                                + "] Entregando pedido #"
+                                + pedido.getIdPedido() + "..."
                 );
 
                 Thread.sleep(tiempoEspera);
@@ -84,23 +83,19 @@ public class Repartidor implements Runnable {
                 Thread.currentThread().interrupt();
 
                 System.out.println(
-                        "[" + nombre + "] La entrega fue interrumpida."
+                        "[Repartidor - " + nombre
+                                + "] Entrega interrumpida."
                 );
 
                 return;
             }
 
             pedido.marcarEntregado();
-
-            System.out.println(
-                    "[" + nombre + "] Pedido #"
-                            + pedido.getIdPedido()
-                            + " entregado."
-            );
+              System.out.println(
+                      "[Repartidor - " + nombre + "] Estado: "
+                              + pedido.getEstado()
+              );
         }
 
-        System.out.println(
-                "[" + nombre + "] Finalizó todas sus entregas."
-        );
-    }
+      }
 }
