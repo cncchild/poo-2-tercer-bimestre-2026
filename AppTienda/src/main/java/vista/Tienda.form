@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="vista.Tienda">
+  <grid id="27dc6" binding="Tienda" layout-manager="GridLayoutManager" row-count="7" column-count="7" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+    <margin top="0" left="0" bottom="0" right="0"/>
+    <constraints>
+      <xy x="20" y="20" width="543" height="400"/>
+    </constraints>
+    <properties/>
+    <border type="none"/>
+    <children>
+      <component id="b77cc" class="javax.swing.JLabel" binding="lblTienda">
+        <constraints>
+          <grid row="0" column="1" row-span="1" col-span="4" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value="Tienda app"/>
+        </properties>
+      </component>
+      <component id="d283e" class="javax.swing.JLabel" binding="lblNombre">
+        <constraints>
+          <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value="Nombre"/>
+        </properties>
+      </component>
+      <component id="bc2da" class="javax.swing.JTextField" binding="txtNombre">
+        <constraints>
+          <grid row="1" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+            <preferred-size width="150" height="-1"/>
+          </grid>
+        </constraints>
+        <properties/>
+      </component>
+      <component id="db1a3" class="javax.swing.JLabel" binding="lblStock">
+        <constraints>
+          <grid row="2" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value="Stock"/>
+        </properties>
+      </component>
+      <component id="d4d20" class="javax.swing.JSpinner" binding="jsStock">
+        <constraints>
+          <grid row="2" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties/>
+      </component>
+      <component id="7f1fc" class="javax.swing.JLabel" binding="lblListado">
+        <constraints>
+          <grid row="4" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value="Listado de Productos"/>
+        </properties>
+      </component>
+      <component id="20253" class="javax.swing.JLabel" binding="lblValor">
+        <constraints>
+          <grid row="2" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value="Valor"/>
+        </properties>
+      </component>
+      <component id="7fb90" class="javax.swing.JSpinner" binding="jValor">
+        <constraints>
+          <grid row="2" column="5" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties/>
+      </component>
+      <component id="d2a1" class="javax.swing.JLabel" binding="lblCategoria">
+        <constraints>
+          <grid row="1" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value="Categoria"/>
+        </properties>
+      </component>
+      <component id="d799a" class="javax.swing.JComboBox" binding="cbmCategoria">
+        <constraints>
+          <grid row="1" column="5" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties/>
+      </component>
+      <grid id="1be37" layout-manager="GridLayoutManager" row-count="1" column-count="4" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+        <margin top="0" left="0" bottom="0" right="0"/>
+        <constraints>
+          <grid row="3" column="2" row-span="1" col-span="4" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties/>
+        <border type="none"/>
+        <children>
+          <component id="90e98" class="javax.swing.JButton" binding="btnEliminar">
+            <constraints>
+              <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <text value="Eliminar"/>
+            </properties>
+          </component>
+          <component id="d5482" class="javax.swing.JButton" binding="btnLimpiar">
+            <constraints>
+              <grid row="0" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <text value="Limpiar"/>
+            </properties>
+          </component>
+          <component id="c782b" class="javax.swing.JButton" binding="btnAgregar">
+            <constraints>
+              <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <text value="Agregar"/>
+            </properties>
+          </component>
+          <component id="98d91" class="javax.swing.JButton" binding="btnEditar">
+            <constraints>
+              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <text value="Editar"/>
+            </properties>
+          </component>
+        </children>
+      </grid>
+      <scrollpane id="84eb3" binding="spTabla">
+        <constraints>
+          <grid row="5" column="1" row-span="1" col-span="5" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties/>
+        <border type="none"/>
+        <children>
+          <component id="a0f7" class="javax.swing.JTable" binding="tblProductos">
+            <constraints/>
+            <properties/>
+          </component>
+        </children>
+      </scrollpane>
+      <component id="b6cb6" class="javax.swing.JButton" binding="btnCerrarSesion">
+        <constraints>
+          <grid row="6" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value="Log out"/>
+        </properties>
+      </component>
+    </children>
+  </grid>
+</form>
