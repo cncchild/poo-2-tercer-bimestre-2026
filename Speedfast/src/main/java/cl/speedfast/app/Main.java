@@ -1,12 +1,15 @@
 package cl.speedfast.app;
 
-import cl.speedfast.ui.MenuPedidos;
+import cl.speedfast.controlador.ControladorPedidos;
+import cl.speedfast.controlador.ControladorUsuarios;
+import cl.speedfast.vista.Login;
+
+import javax.swing.SwingUtilities;
 
 /**
  * Clase principal de la aplicación SpeedFast.
  *
- * Inicia el sistema mediante el menú principal,
- * desde donde se pueden registrar y gestionar pedidos.
+ * Inicia el sistema mediante la ventana de Login.
  *
  * @author Cristian Contreras
  * @version 1.0
@@ -15,8 +18,20 @@ public class Main {
 
     public static void main(String[] args) {
 
-        MenuPedidos menu = new MenuPedidos();
+        SwingUtilities.invokeLater(() -> {
 
-        menu.iniciar();
+            ControladorUsuarios controladorUsuarios =
+                    new ControladorUsuarios();
+
+            ControladorPedidos controladorPedidos =
+                    new ControladorPedidos();
+
+            Login login = new Login(
+                    controladorUsuarios,
+                    controladorPedidos
+            );
+
+            login.setVisible(true);
+        });
     }
 }

@@ -1,4 +1,4 @@
-# Semana 1 a 5 – Programación Orientada a Objetos II
+# Semana 1 a 6 – Programación Orientada a Objetos II
 
 ## Descripción
 
@@ -882,6 +882,429 @@ Sincronización de procesos,
 recursos compartidos, synchronized,
 control de concurrencia y
 procesamiento seguro de pedidos
+```
+## Semana 6
+
+Durante la Semana 6 se amplió el sistema **SpeedFast** incorporando una **interfaz gráfica de usuario (GUI)** desarrollada con **Java Swing**, permitiendo reemplazar la interacción principal por consola por una aplicación de escritorio con ventanas, formularios, botones y tablas.
+
+Además, se reorganizó el proyecto utilizando una estructura basada en **Modelo-Vista-Controlador (MVC)**, separando la lógica de negocio, el acceso y gestión de los datos, los controladores y la interfaz gráfica.
+
+### Interfaz gráfica
+
+Se desarrolló una interfaz gráfica utilizando componentes de **Java Swing** y ventanas basadas en `JFrame`.
+
+La ventana principal permite gestionar los pedidos registrados mediante una interfaz visual.
+
+Entre las funcionalidades disponibles se encuentran:
+
+* Registrar pedidos.
+* Visualizar pedidos mediante una tabla.
+* Editar información de pedidos.
+* Cancelar pedidos.
+* Iniciar entregas.
+* Cerrar sesión.
+* Actualizar automáticamente la información mostrada.
+
+La información de los pedidos se presenta mediante un `JTable`, utilizando `DefaultTableModel` para cargar y actualizar dinámicamente los datos.
+
+### Sistema de inicio de sesión
+
+Se incorporó una ventana de inicio de sesión mediante la clase `Login`.
+
+El sistema permite validar las credenciales antes de acceder a la ventana principal.
+
+Se incorporaron diferentes roles de usuario:
+
+* Administrador.
+* Usuario.
+
+El rol determina las operaciones que pueden realizarse desde la interfaz.
+
+El administrador puede utilizar funcionalidades adicionales como:
+
+* Editar pedidos.
+* Cancelar pedidos.
+* Iniciar entregas.
+
+El usuario puede consultar y registrar pedidos, manteniendo restringidas determinadas operaciones administrativas.
+
+### Modelo Vista Controlador
+
+Durante esta semana se reorganizó el proyecto utilizando una estructura basada en el patrón **MVC (Modelo-Vista-Controlador)**.
+
+La estructura general quedó organizada de la siguiente manera:
+
+```text
+Modelo
+   ↓
+Entidades y lógica de negocio
+
+Controlador
+   ↓
+Coordina las operaciones
+
+Vista
+   ↓
+Interfaz gráfica
+```
+
+El objetivo de esta separación es evitar que la interfaz gráfica contenga directamente toda la lógica de negocio.
+
+### Modelo
+
+El paquete `model` mantiene las clases relacionadas con los pedidos y sus estados.
+
+Entre ellas se encuentran:
+
+* `Pedido`
+* `PedidoComida`
+* `PedidoEncomienda`
+* `PedidoExpress`
+* `EstadoPedido`
+* `Usuario`
+
+La clase abstracta `Pedido` continúa concentrando los atributos y comportamientos comunes de los distintos tipos de pedidos.
+
+Se mantiene el uso de herencia y polimorfismo desarrollado durante las semanas anteriores.
+
+### Controladores
+
+Se incorporó el paquete `controlador`, encargado de conectar la interfaz gráfica con la lógica de gestión de los datos.
+
+Se desarrollaron:
+
+* `ControladorPedidos`
+* `ControladorUsuarios`
+
+`ControladorPedidos` permite realizar operaciones como:
+
+* Registrar pedidos.
+* Obtener la lista de pedidos.
+* Editar pedidos.
+* Cancelar pedidos.
+* Buscar pedidos.
+* Procesar pedidos.
+* Iniciar la entrega de un pedido específico.
+
+De esta manera, `VentanaPrincipal` no necesita acceder directamente a `GestorPedidos` para realizar las operaciones.
+
+El flujo principal queda:
+
+```text
+VentanaPrincipal
+       ↓
+ControladorPedidos
+       ↓
+GestorPedidos
+       ↓
+Pedido
+```
+
+### Registro de pedidos
+
+La ventana principal permite registrar nuevos pedidos mediante un formulario gráfico.
+
+El usuario puede ingresar:
+
+* Dirección de entrega.
+* Distancia en kilómetros.
+* Tipo de pedido.
+
+El tipo de pedido se selecciona mediante un `JComboBox`.
+
+Las opciones corresponden a:
+
+```text
+1. Pedido de comida
+2. Pedido de encomienda
+3. Pedido express
+```
+
+El sistema genera automáticamente el identificador del nuevo pedido utilizando los pedidos registrados.
+
+Antes de registrar el pedido se validan los datos ingresados, evitando direcciones vacías y distancias inválidas.
+
+### Tabla de pedidos
+
+Los pedidos registrados se muestran mediante un `JTable`.
+
+La tabla contiene información como:
+
+```text
+ID
+Dirección
+Tipo
+Distancia
+Tiempo
+Repartidor
+Estado
+```
+
+El tiempo de entrega se obtiene mediante el método:
+
+```java
+pedido.calcularTiempoEntrega();
+```
+
+De esta manera se mantiene la lógica específica de cada tipo de pedido mediante polimorfismo.
+
+Al seleccionar una fila de la tabla, la información del pedido se carga en los campos de la interfaz para facilitar su edición y gestión.
+
+### Edición y cancelación
+
+La interfaz permite modificar la información de un pedido seleccionado.
+
+Se pueden actualizar:
+
+* Dirección.
+* Distancia.
+
+La cancelación utiliza las reglas de negocio existentes en la clase `Pedido`, evitando cancelar pedidos que ya se encuentran en estados que no permiten dicha operación.
+
+La lógica de estas operaciones continúa centralizada en `GestorPedidos` y es utilizada mediante `ControladorPedidos`.
+
+### Inicio de entrega individual
+
+Una de las principales modificaciones de esta semana fue incorporar la posibilidad de iniciar la entrega de **un pedido específico seleccionado desde la tabla**.
+
+Anteriormente, `procesarPedidos()` permitía que los repartidores trabajaran sobre todos los pedidos pendientes disponibles en la zona de carga.
+
+Para la interfaz gráfica se incorporó el método:
+
+```java
+iniciarEntrega(int id, Consumer<Pedido> notificador)
+```
+
+Este método permite seleccionar un pedido determinado y comenzar solamente su proceso de entrega.
+
+El flujo es:
+
+```text
+Seleccionar pedido
+       ↓
+Iniciar entrega
+       ↓
+Buscar pedido por ID
+       ↓
+Repartidor
+       ↓
+EN_REPARTO
+       ↓
+Simulación de entrega
+       ↓
+ENTREGADO
+```
+
+Por ejemplo, si existen tres pedidos:
+
+```text
+Pedido #1 → PENDIENTE
+Pedido #2 → PENDIENTE
+Pedido #3 → PENDIENTE
+```
+
+y se selecciona el pedido #2, solamente este pedido cambia de estado:
+
+```text
+Pedido #1 → PENDIENTE
+Pedido #2 → EN_REPARTO → ENTREGADO
+Pedido #3 → PENDIENTE
+```
+
+Esto permite diferenciar el procesamiento concurrente de la Semana 5 de la gestión individual de entregas desde la interfaz gráfica.
+
+### Repartidor y actualización de la interfaz
+
+La clase `Repartidor` fue reorganizada dentro del paquete:
+
+```text
+cl.speedfast.tareas
+```
+
+La clase continúa implementando:
+
+```java
+public class Repartidor implements Runnable
+```
+
+y mantiene la funcionalidad de procesamiento concurrente desarrollada anteriormente.
+
+Además, se incorporó la posibilidad de procesar un pedido específico.
+
+Para informar los cambios de estado a la interfaz se utiliza:
+
+```java
+Consumer<Pedido>
+```
+
+El repartidor informa los cambios cuando el pedido pasa a:
+
+```text
+PENDIENTE
+   ↓
+EN_REPARTO
+   ↓
+ENTREGADO
+```
+
+La interfaz gráfica utiliza `SwingUtilities.invokeLater()` para actualizar la tabla de manera segura dentro del hilo de eventos de Swing.
+
+### Conservación de la concurrencia
+
+La incorporación de la interfaz gráfica no elimina el trabajo realizado durante las semanas anteriores.
+
+Se mantiene la funcionalidad de procesamiento concurrente mediante:
+
+```java
+ExecutorService
+```
+
+y:
+
+```java
+Executors.newFixedThreadPool(3);
+```
+
+Los tres repartidores continúan pudiendo trabajar sobre la `ZonaDeCarga` compartida.
+
+Por otra parte, la nueva función de entrega individual permite que la interfaz seleccione específicamente qué pedido desea procesar.
+
+De esta forma, el proyecto integra:
+
+```text
+POO
+ ↓
+Interfaces
+ ↓
+Colecciones
+ ↓
+Estados
+ ↓
+Concurrencia
+ ↓
+Sincronización
+ ↓
+Interfaz gráfica
+ ↓
+MVC
+```
+
+### Estructura actual del proyecto
+
+La estructura actual del proyecto quedó organizada de la siguiente manera:
+
+```text
+src/
+└── main/
+    └── java/
+        └── cl/
+            └── speedfast/
+                │
+                ├── app/
+                │   └── Main.java
+                │
+                ├── controlador/
+                │   ├── ControladorPedidos.java
+                │   └── ControladorUsuarios.java
+                │
+                ├── data/
+                │   ├── GestorPedidos.java
+                │   ├── HistorialPedidos.java
+                │   └── ZonaDeCarga.java
+                │
+                ├── interfaces/
+                │   ├── Despachable.java
+                │   ├── Cancelable.java
+                │   └── Rastreable.java
+                │
+                ├── model/
+                │   ├── Pedido.java
+                │   ├── PedidoComida.java
+                │   ├── PedidoEncomienda.java
+                │   ├── PedidoExpress.java
+                │   ├── EstadoPedido.java
+                │   └── Usuario.java
+                │
+                ├── tareas/
+                │   └── Repartidor.java
+                │
+                └── vista/
+                    ├── Login.java
+                    └── VentanaPrincipal.java
+```
+
+### Conceptos incorporados en Semana 6
+
+* Java Swing.
+* `JFrame`.
+* Interfaces gráficas de usuario.
+* `JButton`.
+* `JTextField`.
+* `JTextArea`.
+* `JComboBox`.
+* `JTable`.
+* `DefaultTableModel`.
+* `JOptionPane`.
+* Eventos de botones.
+* Selección de filas.
+* Validación de datos.
+* Actualización dinámica de tablas.
+* Patrón Modelo-Vista-Controlador.
+* Separación de responsabilidades.
+* Control de acceso mediante roles.
+* Inicio de sesión.
+* Procesamiento individual de pedidos.
+* `Consumer<Pedido>`.
+* `SwingUtilities.invokeLater()`.
+* Integración entre GUI y concurrencia.
+* Reutilización de las clases desarrolladas en semanas anteriores.
+
+### Evolución del proyecto
+
+```text
+Semana 1
+   ↓
+Clases, objetos, encapsulamiento,
+herencia, sobrecarga y polimorfismo
+
+   ↓
+
+Semana 2
+   ↓
+Abstracción, métodos abstractos,
+Template Method y organización por paquetes
+
+   ↓
+
+Semana 3
+   ↓
+Interfaces, colecciones, historial,
+búsqueda, estados y reglas de negocio
+
+   ↓
+
+Semana 4
+   ↓
+Concurrencia, hilos, Runnable,
+ExecutorService y procesamiento paralelo
+
+   ↓
+
+Semana 5
+   ↓
+Sincronización de procesos,
+recursos compartidos, synchronized,
+control de concurrencia y
+procesamiento seguro de pedidos
+
+   ↓
+
+Semana 6
+   ↓
+Interfaz gráfica, Java Swing,
+MVC, login, roles,
+gestión visual de pedidos
+y entrega individual
 ```
 
 

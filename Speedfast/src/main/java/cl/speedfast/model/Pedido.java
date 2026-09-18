@@ -71,7 +71,23 @@ public abstract class Pedido
     public double getDistanciaKm() {
         return distanciaKm;
     }
+    /**
+     * Modifica la dirección de entrega del pedido.
+     *
+     * @param direccionEntrega nueva dirección de entrega
+     */
+    public void setDireccionEntrega(String direccionEntrega) {
+        this.direccionEntrega = direccionEntrega;
+    }
 
+    /**
+     * Modifica la distancia de entrega del pedido.
+     *
+     * @param distanciaKm nueva distancia en kilómetros
+     */
+    public void setDistanciaKm(double distanciaKm) {
+        this.distanciaKm = distanciaKm;
+    }
     /**
      * Obtiene el nombre del repartidor asignado.
      *

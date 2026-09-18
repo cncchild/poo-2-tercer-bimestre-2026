@@ -11,7 +11,7 @@ En este repositorio se almacenan las actividades, ejercicios formativos y evalua
 - Semana 3: Integrando Abstracción, Polimorfismo y Desacoplamiento Sumativa -1.
 - Semana 4: Ejecutando múltiples hilos - formativa-3.
 - Semana 5: sincronización de procesos concurrentes Sumativa-2.
-- Semana 6: Actividades y ejercicios formativos.
+- Semana 6: Diseñando interfaces gráficas para aplicaciones en Java formativa-4.
 - Semana 7: Actividades y ejercicios formativos.
 - Semana 8: Actividades y ejercicios formativos.
 - Semana 9: Evaluación Final Transversal.

@@ -53,7 +53,9 @@ public class HistorialPedidos {
 
         return null;
     }
-
+    public List<Pedido> getHistorial() {
+        return historial;
+    }
     /**
      * Muestra en consola el historial de pedidos registrados,
      * indicando el tipo de pedido, su identificador y el repartidor asignado.
@@ -88,4 +90,5 @@ public class HistorialPedidos {
 
         System.out.println("==============================");
     }
+
 }
