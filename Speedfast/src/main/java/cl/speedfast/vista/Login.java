@@ -1,75 +1,97 @@
 package cl.speedfast.vista;
 
-import cl.speedfast.controlador.ControladorPedidos;
 import cl.speedfast.controlador.ControladorUsuarios;
+import cl.speedfast.dao.EntregaDAO;
+import cl.speedfast.dao.PedidoDAO;
+import cl.speedfast.dao.RepartidorDAO;
 import cl.speedfast.model.Usuario;
 
 import javax.swing.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 public class Login extends JFrame {
 
     private JPanel Login;
-    private JLabel lblLogin;
-    private JLabel lblUsuario;
-    private JLabel lblContrasenia;
-    private JTextField txtUsuario;
-    private JPasswordField txtContrasenia;
-    private JButton btnAcceder;
-    private JButton btnCancelar;
+    private JLabel txtTitulo;
+    private JLabel txtParrafo;
+    private JTextField jNombreDejUsuarioTxt;
+    private JPasswordField jContraseñaPassword;
+    private JButton BtnIniciar;
+    private JButton aquiButton;
+    private JButton btnCerrar;
 
-    private ControladorUsuarios controladorUsuarios;
-    private ControladorPedidos controladorPedidos;
+    private final ControladorUsuarios controladorUsuarios;
+    private final PedidoDAO pedidoDAO;
+    private final RepartidorDAO repartidorDAO;
+    private final EntregaDAO entregaDAO;
 
     public Login(
             ControladorUsuarios controladorUsuarios,
-            ControladorPedidos controladorPedidos) {
+            PedidoDAO pedidoDAO,
+            RepartidorDAO repartidorDAO,
+            EntregaDAO entregaDAO) {
 
         this.controladorUsuarios = controladorUsuarios;
-        this.controladorPedidos = controladorPedidos;
+        this.pedidoDAO = pedidoDAO;
+        this.repartidorDAO = repartidorDAO;
+        this.entregaDAO = entregaDAO;
 
-        setTitle("Login Pedidos Flash");
+        setTitle("SpeedFast - Login");
         setContentPane(Login);
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
-        setSize(350, 250);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setSize(400, 300);
         setLocationRelativeTo(null);
         setResizable(false);
 
-        btnAcceder.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                autenticarUsuario();
-            }
-        });
+        BtnIniciar.addActionListener(e -> iniciarSesion());
 
-        btnCancelar.addActionListener(e -> salir());
+        btnCerrar.addActionListener(e -> cerrarAplicacion());
+
+        aquiButton.addActionListener(e -> registrarUsuario());
     }
 
-    private void autenticarUsuario() {
+    private void iniciarSesion() {
 
-        String nombre = txtUsuario.getText().trim();
+        String nombreUsuario =
+                jNombreDejUsuarioTxt.getText().trim();
 
-        String pass =
-                new String(txtContrasenia.getPassword());
+        String contrasenia =
+                new String(jContraseñaPassword.getPassword());
+
+        if (nombreUsuario.isEmpty() || contrasenia.isEmpty()) {
+
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Debes ingresar usuario y contraseña",
+                    "Datos incompletos",
+                    JOptionPane.WARNING_MESSAGE
+            );
+
+            return;
+        }
 
         Usuario usuario =
-                controladorUsuarios.autenticar(nombre, pass);
+                controladorUsuarios.autenticar(
+                        nombreUsuario,
+                        contrasenia
+                );
 
         if (usuario != null) {
 
             JOptionPane.showMessageDialog(
                     this,
-                    "Bienvenido, " + usuario.getRol()
+                    "Bienvenido, " + usuario.getNombreUsuario()
             );
 
-            VentanaPrincipal ventana =
-                    new VentanaPrincipal(
+            Home home =
+                    new Home(
+                            usuario.getNombreUsuario(),
                             usuario.getRol(),
-                            controladorPedidos
+                            controladorUsuarios,
+                            pedidoDAO,
+                            repartidorDAO,
+                            entregaDAO
                     );
-
-            ventana.setVisible(true);
+            home.setVisible(true);
 
             this.dispose();
 
@@ -78,20 +100,29 @@ public class Login extends JFrame {
             JOptionPane.showMessageDialog(
                     this,
                     "Usuario o contraseña incorrectos",
-                    "Error",
+                    "Error de inicio de sesión",
                     JOptionPane.ERROR_MESSAGE
             );
         }
     }
 
-    private void salir() {
+    private void registrarUsuario() {
+
+        RegistroUsuarios registro =
+                new RegistroUsuarios(
+                        this,
+                        controladorUsuarios
+                );
+
+        registro.setVisible(true);
+    }
+    private void cerrarAplicacion() {
 
         int respuesta = JOptionPane.showConfirmDialog(
                 this,
                 "¿Estás seguro de que deseas cerrar la aplicación?",
-                "Salir",
-                JOptionPane.YES_NO_OPTION,
-                JOptionPane.QUESTION_MESSAGE
+                "Cerrar",
+                JOptionPane.YES_NO_OPTION
         );
 
         if (respuesta == JOptionPane.YES_OPTION) {

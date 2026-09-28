@@ -1,4 +1,4 @@
-# Semana 1 a 6 – Programación Orientada a Objetos II
+# Semana 1 a 7 – Programación Orientada a Objetos II
 
 ## Descripción
 
@@ -1308,8 +1308,598 @@ y entrega individual
 ```
 
 
-**Autor**
+# Semana 7 – Conectando aplicaciones Java con bases de datos mediante JDBC
 
-Cristian Contreras
+## Descripción
+
+Durante la **Semana 7** se amplió el proyecto **SpeedFast** incorporando persistencia de datos mediante una base de datos **MySQL** y conexión desde Java utilizando **JDBC (Java Database Connectivity)**.
+
+El objetivo fue conectar la aplicación desarrollada durante las semanas anteriores con una base de datos relacional, permitiendo almacenar, consultar y actualizar información de pedidos, repartidores y entregas.
+
+De esta manera, SpeedFast deja de depender únicamente de información almacenada en memoria y comienza a trabajar con **datos persistentes**.
+
+## Base de datos
+
+Se creó la base de datos:
+
+```text
+speedfast_db
+```
+
+Las principales tablas utilizadas son:
+
+```text
+pedido
+repartidor
+entrega
+```
+
+Además, el proyecto incorpora la tabla:
+
+```text
+usuario
+```
+
+para gestionar el inicio de sesión y los roles de acceso.
+
+### Tabla pedido
+
+Almacena la información de los pedidos:
+
+```text
+id
+direccion
+tipo
+distancia_km
+estado
+```
+
+### Tabla repartidor
+
+Almacena los repartidores disponibles:
+
+```text
+id
+nombre
+```
+
+### Tabla entrega
+
+Relaciona los pedidos con los repartidores:
+
+```text
+id
+id_pedido
+id_repartidor
+fecha
+hora
+```
+
+Las relaciones principales son:
+
+```text
+REPARTIDOR
+     │
+     │ 1
+     │
+     │ N
+   ENTREGA
+     │
+     │ N
+     │
+     │ 1
+   PEDIDO
+```
+
+Un repartidor puede realizar varias entregas y cada entrega queda asociada a un pedido y a un repartidor.
+
+## Conexión JDBC
+
+Se creó la clase:
+
+```text
+ConexionBD
+```
+
+ubicada en:
+
+```text
+cl.speedfast.conexion
+```
+
+Esta clase centraliza la conexión con MySQL mediante `DriverManager`.
+
+La conexión utiliza:
+
+```text
+jdbc:mysql://localhost:3306/speedfast_db
+```
+
+El flujo de conexión es:
+
+```text
+Aplicación Java
+      ↓
+ConexionBD
+      ↓
+DriverManager
+      ↓
+MySQL
+      ↓
+speedfast_db
+```
+
+## MySQL Connector/J
+
+Se incorporó el conector JDBC de MySQL mediante Maven:
+
+```xml
+<dependency>
+    <groupId>com.mysql</groupId>
+    <artifactId>mysql-connector-j</artifactId>
+    <version>26.7.0</version>
+</dependency>
+```
+
+Esto permite que la aplicación Java pueda comunicarse directamente con MySQL.
+
+## Patrón DAO
+
+Para separar el acceso a datos de la interfaz gráfica se implementó el patrón **DAO (Data Access Object)**.
+
+Se incorporaron las clases:
+
+```text
+PedidoDAO
+RepartidorDAO
+EntregaDAO
+UsuarioDAO
+```
+
+La estructura general quedó:
+
+```text
+Interfaz gráfica
+       ↓
+      DAO
+       ↓
+  ConexionBD
+       ↓
+      JDBC
+       ↓
+     MySQL
+```
+
+Esta separación permite mantener las consultas SQL fuera de las ventanas Swing.
+
+## PedidoDAO
+
+La clase `PedidoDAO` se encarga de gestionar los pedidos almacenados en MySQL.
+
+Entre las operaciones implementadas se encuentran:
+
+```text
+Guardar pedidos
+Listar pedidos
+Actualizar pedidos
+Actualizar estado
+Obtener siguiente ID
+```
+
+Para las consultas e inserciones se utiliza `PreparedStatement`.
+
+Por ejemplo:
+
+```java
+PreparedStatement ps =
+        conexion.prepareStatement(sql);
+```
+
+Los datos son enviados mediante parámetros para evitar construir directamente las consultas SQL con los valores ingresados por el usuario.
+
+## RepartidorDAO
+
+La clase `RepartidorDAO` permite consultar los repartidores almacenados en la base de datos.
+
+La operación principal es:
+
+```java
+listarTodos()
+```
+
+El método utiliza `ResultSet` para obtener los registros y convertirlos en objetos `Repartidor`.
+
+El flujo es:
+
+```text
+MySQL
+  ↓
+RepartidorDAO
+  ↓
+ResultSet
+  ↓
+List<Repartidor>
+  ↓
+Interfaz gráfica
+```
+
+Estos repartidores posteriormente pueden ser seleccionados al iniciar una entrega.
+
+## EntregaDAO
+
+La clase `EntregaDAO` permite registrar las entregas realizadas.
+
+El método principal es:
+
+```java
+guardar(Entrega entrega)
+```
+
+La información almacenada incluye:
+
+```text
+ID del pedido
+ID del repartidor
+Fecha
+Hora
+```
+
+La relación queda representada mediante:
+
+```text
+entrega.id_pedido
+        ↓
+pedido.id
+
+entrega.id_repartidor
+        ↓
+repartidor.id
+```
+
+## Integración con la interfaz gráfica
+
+La interfaz desarrollada durante la Semana 6 fue conectada con la base de datos.
+
+El flujo para registrar un pedido es:
+
+```text
+Formulario
+    ↓
+Crear Pedido
+    ↓
+PedidoDAO
+    ↓
+PreparedStatement
+    ↓
+MySQL
+    ↓
+Tabla pedido
+```
+
+La ventana `ListaPedidos` consulta los datos mediante:
+
+```java
+pedidoDAO.listarTodos();
+```
+
+Los resultados son mostrados mediante un `JTable`.
+
+La tabla presenta:
+
+```text
+ID
+Dirección
+Tipo
+Distancia
+Tiempo
+Repartidor
+Estado
+```
+
+## Registro de pedidos
+
+La ventana `RegistroPedidos` permite ingresar:
+
+```text
+Dirección
+Distancia
+Tipo de pedido
+```
+
+El sistema crea el objeto correspondiente:
+
+```text
+PedidoComida
+PedidoEncomienda
+PedidoExpress
+```
+
+Luego se almacena utilizando:
+
+```java
+pedidoDAO.guardar(pedido);
+```
+
+Una vez guardado correctamente, la tabla de pedidos se actualiza.
+
+## Inicio de entrega
+
+Se incorporó la integración entre pedidos, repartidores y entregas.
+
+El proceso es:
+
+```text
+Seleccionar pedido
+       ↓
+Iniciar entrega
+       ↓
+Consultar repartidores
+       ↓
+Seleccionar repartidor
+       ↓
+Asignar repartidor
+       ↓
+EN_REPARTO
+       ↓
+Registrar entrega
+       ↓
+Simular entrega
+       ↓
+ENTREGADO
+```
+
+Para obtener los repartidores se utiliza:
+
+```java
+repartidorDAO.listarTodos();
+```
+
+La entrega se registra mediante:
+
+```java
+entregaDAO.guardar(entrega);
+```
+
+El estado del pedido se actualiza mediante:
+
+```java
+pedidoDAO.actualizarEstado(
+        pedido.getIdPedido(),
+        EstadoPedido.EN_REPARTO
+);
+```
+
+Posteriormente, una vez finalizada la simulación, el pedido pasa a:
+
+```text
+ENTREGADO
+```
+
+## Persistencia de estados
+
+Los pedidos utilizan el enum:
+
+```java
+EstadoPedido
+```
+
+con los siguientes estados:
+
+```text
+PENDIENTE
+EN_REPARTO
+ENTREGADO
+CANCELADO
+```
+
+El flujo normal de una entrega es:
+
+```text
+PENDIENTE
+    ↓
+EN_REPARTO
+    ↓
+ENTREGADO
+```
+
+Los cambios de estado también se almacenan en la base de datos.
+
+## Manejo de excepciones
+
+Las operaciones JDBC utilizan `try-catch` para controlar errores relacionados con la conexión y las consultas SQL.
+
+También se utilizan bloques `try-with-resources` para cerrar automáticamente:
+
+```text
+Connection
+PreparedStatement
+ResultSet
+```
+
+En caso de producirse un error, la aplicación informa al usuario mediante mensajes de Swing.
+
+## Estructura del proyecto
+
+La estructura relacionada con la Semana 7 quedó organizada de la siguiente manera:
+
+```text
+src/
+└── main/
+    └── java/
+        └── cl/
+            └── speedfast/
+                ├── conexion/
+                │   └── ConexionBD.java
+                │
+                ├── dao/
+                │   ├── PedidoDAO.java
+                │   ├── RepartidorDAO.java
+                │   ├── EntregaDAO.java
+                │   └── UsuarioDAO.java
+                │
+                ├── model/
+                │   ├── Pedido.java
+                │   ├── PedidoComida.java
+                │   ├── PedidoEncomienda.java
+                │   ├── PedidoExpress.java
+                │   ├── EstadoPedido.java
+                │   ├── Repartidor.java
+                │   ├── Entrega.java
+                │   └── Usuario.java
+                │
+                └── vista/
+                    ├── Login.java
+                    ├── Home.java
+                    ├── ListaPedidos.java
+                    ├── RegistroPedidos.java
+                    ├── EditarRegistroPedido.java
+                    ├── ListaUsuarios.java
+                    ├── RegistroUsuarios.java
+                    └── EditarUsuarios.java
+```
+
+## Conceptos incorporados en Semana 7
+
+* JDBC.
+* MySQL.
+* `DriverManager`.
+* `Connection`.
+* `PreparedStatement`.
+* `ResultSet`.
+* `SQLException`.
+* `try-catch`.
+* `try-with-resources`.
+* Patrón DAO.
+* Persistencia de datos.
+* Consultas SQL.
+* Claves primarias.
+* Claves foráneas.
+* Relaciones entre tablas.
+* Integración entre Java Swing y MySQL.
+* Registro de pedidos.
+* Consulta de repartidores.
+* Registro de entregas.
+* Actualización de estados.
+* Persistencia de información.
+
+## Evolución del proyecto
+
+```text
+Semana 1
+   ↓
+POO, clases, objetos, herencia,
+encapsulamiento y polimorfismo
+
+   ↓
+
+Semana 2
+   ↓
+Abstracción, métodos abstractos,
+Template Method y paquetes
+
+   ↓
+
+Semana 3
+   ↓
+Interfaces, colecciones,
+historial y estados
+
+   ↓
+
+Semana 4
+   ↓
+Hilos, Runnable,
+ExecutorService y concurrencia
+
+   ↓
+
+Semana 5
+   ↓
+Sincronización, recursos compartidos
+y procesamiento concurrente seguro
+
+   ↓
+
+Semana 6
+   ↓
+Java Swing, GUI, login,
+roles y gestión visual
+
+   ↓
+
+Semana 7
+   ↓
+MySQL, JDBC, DAO,
+persistencia de datos,
+pedidos, repartidores
+y entregas
+```
+
+## Resultado de la Semana 7
+
+Al finalizar esta semana, **SpeedFast** cuenta con una aplicación Java conectada a una base de datos MySQL mediante JDBC.
+
+La aplicación permite:
+
+* Registrar pedidos desde la interfaz gráfica.
+* Guardar pedidos en MySQL.
+* Consultar pedidos almacenados.
+* Mostrar pedidos mediante `JTable`.
+* Consultar repartidores.
+* Seleccionar repartidores para realizar entregas.
+* Registrar entregas.
+* Actualizar estados de los pedidos.
+* Mantener los datos almacenados de forma persistente.
+* Separar el acceso a datos mediante clases DAO.
+
+De esta forma, SpeedFast evoluciona desde una aplicación orientada a objetos con concurrencia e interfaz gráfica hacia una aplicación con **persistencia real de datos mediante MySQL y JDBC**.
+
+             SPEEDFAST
+                 │
+                 ▼
+          INTERFAZ SWING
+                 │
+       ┌─────────┴─────────┐
+       ▼                   ▼
+ RegistroPedidos      ListaPedidos
+       │                   │
+       ▼                   ▼
+   PedidoDAO          PedidoDAO
+       │                   │
+       └─────────┬─────────┘
+                 ▼
+             ConexionBD
+                 │
+                 ▼
+               JDBC
+                 │
+                 ▼
+              MySQL
+                 │
+          speedfast_db
+        ┌────────┼────────┐
+        ▼        ▼        ▼
+     pedido  repartidor  entrega
+
+     
+## Tecnologías
+
+* Java
+* Maven
+* IntelliJ IDEA
+* MySQL
+* MySQL Connector/J
+* JDBC
+* Java Swing
+* Programación Orientada a Objetos
+* Patrón DAO
+* Persistencia de datos
+* Concurrencia
+
+---
+
+## Autor
+
+**Cristian Contreras**
 
 Duoc UC — 2026
