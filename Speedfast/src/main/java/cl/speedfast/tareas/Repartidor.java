@@ -89,6 +89,9 @@ public class Repartidor implements Runnable {
     /**
      * Notifica que un pedido cambió de estado.
      *
+     * Utiliza el Consumer recibido para comunicar
+     * el cambio al componente correspondiente.
+     *
      * @param pedido pedido modificado
      */
     private void notificarCambio(Pedido pedido) {
@@ -99,12 +102,15 @@ public class Repartidor implements Runnable {
     }
 
     /**
-     * Ejecuta las entregas asignadas al repartidor.
+     * Ejecuta el procesamiento de las entregas.
+     *
+     * Si existe un pedido específico, procesa solamente
+     * ese pedido. En caso contrario, retira y procesa
+     * pedidos disponibles desde la zona de carga compartida.
      */
     @Override
     public void run() {
 
-        // Pedido específico.
         if (pedido != null) {
 
             procesarPedido(pedido);
@@ -112,7 +118,6 @@ public class Repartidor implements Runnable {
             return;
         }
 
-        // Pedidos provenientes de la zona de carga.
         while (true) {
 
             Pedido pedidoZona =
@@ -129,27 +134,21 @@ public class Repartidor implements Runnable {
     /**
      * Procesa la entrega de un pedido.
      *
+     * Asigna el repartidor, cambia el estado del pedido
+     * a EN_REPARTO, simula el tiempo de entrega y finalmente
+     * cambia el estado a ENTREGADO.
+     *
+     * También notifica los cambios de estado mediante
+     * el Consumer configurado.
+     *
      * @param pedido pedido que será procesado
      */
     private void procesarPedido(Pedido pedido) {
-
-        System.out.println(
-                "\n[Repartidor - " + nombre
-                        + "] Retirando pedido #"
-                        + pedido.getIdPedido() + "..."
-        );
 
         pedido.asignarRepartidor(nombre);
 
         pedido.marcarEnReparto();
 
-        System.out.println(
-                "[Repartidor - " + nombre
-                        + "] Estado: "
-                        + pedido.getEstado()
-        );
-
-        // Avisar que está en reparto.
         notificarCambio(pedido);
 
         try {
@@ -157,35 +156,17 @@ public class Repartidor implements Runnable {
             int tiempoEspera =
                     1000 + (int) (Math.random() * 3000);
 
-            System.out.println(
-                    "\n[Repartidor - " + nombre
-                            + "] Entregando pedido #"
-                            + pedido.getIdPedido() + "..."
-            );
-
             Thread.sleep(tiempoEspera);
 
         } catch (InterruptedException e) {
 
             Thread.currentThread().interrupt();
 
-            System.out.println(
-                    "[Repartidor - " + nombre
-                            + "] Entrega interrumpida."
-            );
-
             return;
         }
 
         pedido.marcarEntregado();
 
-        System.out.println(
-                "[Repartidor - " + nombre
-                        + "] Estado: "
-                        + pedido.getEstado()
-        );
-
-        // Avisar que la entrega terminó.
         notificarCambio(pedido);
     }
 }

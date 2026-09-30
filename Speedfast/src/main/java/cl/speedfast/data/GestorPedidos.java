@@ -6,19 +6,22 @@ import cl.speedfast.model.PedidoComida;
 import cl.speedfast.model.PedidoEncomienda;
 import cl.speedfast.model.PedidoExpress;
 import cl.speedfast.tareas.Repartidor;
-import java.util.function.Consumer;
 
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Consumer;
 
 /**
  * Gestiona las operaciones principales relacionadas con los pedidos
  * de la aplicación SpeedFast.
  *
- * Permite registrar, editar, cancelar y procesar pedidos,
+ * Permite registrar, cancelar y procesar pedidos,
  * además de consultar el historial y la zona de carga.
+ *
+ * Esta clase corresponde a la implementación utilizada
+ * para el procesamiento concurrente de pedidos.
  *
  * @author Cristian Contreras
  * @version 1.0
@@ -74,21 +77,13 @@ public class GestorPedidos {
         );
 
         if (pedido == null) {
-
-            System.out.println(
-                    "[ERROR] Tipo de pedido no válido."
-            );
-
             return;
         }
 
-        // Asignación del repartidor según el tipo y distancia.
         pedido.asignarRepartidor();
 
-        // Guardar pedido en el historial.
         historialPedidos.agregarPedido(pedido);
 
-        // Agregar pedido a la zona de carga.
         zonaDeCarga.agregarPedido(pedido);
     }
 
@@ -142,11 +137,6 @@ public class GestorPedidos {
      * en la zona de carga.
      */
     public void mostrarZonaDeCarga() {
-
-        System.out.println("\n================================");
-        System.out.println("         ZONA DE CARGA");
-        System.out.println("================================");
-
         zonaDeCarga.mostrarPedidos();
     }
 
@@ -160,11 +150,6 @@ public class GestorPedidos {
         Pedido pedido = historialPedidos.buscarPedido(id);
 
         if (pedido == null) {
-
-            System.out.println(
-                    "[ERROR] No existe un pedido con ese ID."
-            );
-
             return;
         }
 
@@ -179,13 +164,11 @@ public class GestorPedidos {
      * Muestra el historial de pedidos registrados.
      */
     public void mostrarHistorial() {
-
         historialPedidos.mostrarHistorial();
     }
 
     /**
-     * Busca un pedido mediante su identificador
-     * y muestra su información en consola.
+     * Busca un pedido mediante su identificador.
      *
      * @param id identificador del pedido
      */
@@ -194,29 +177,10 @@ public class GestorPedidos {
         Pedido pedido = historialPedidos.buscarPedido(id);
 
         if (pedido == null) {
-
-            System.out.println(
-                    "[ERROR] No existe un pedido con ese ID."
-            );
-
             return;
         }
 
-        System.out.println("\n==============================");
-        System.out.println("        PEDIDO ENCONTRADO");
-        System.out.println("==============================");
-
         pedido.mostrarResumen();
-
-        System.out.println(
-                "Repartidor: " + pedido.getRepartidor()
-        );
-
-        System.out.println(
-                "Estado: " + pedido.getEstado()
-        );
-
-        System.out.println("==============================");
     }
 
     /**
@@ -229,11 +193,6 @@ public class GestorPedidos {
         Pedido pedido = historialPedidos.buscarPedido(id);
 
         if (pedido == null) {
-
-            System.out.println(
-                    "[ERROR] No existe un pedido con ese ID."
-            );
-
             return;
         }
 
@@ -250,11 +209,6 @@ public class GestorPedidos {
         Pedido pedido = historialPedidos.buscarPedido(id);
 
         if (pedido == null) {
-
-            System.out.println(
-                    "[ERROR] No existe un pedido con ese ID."
-            );
-
             return;
         }
 
@@ -267,21 +221,15 @@ public class GestorPedidos {
      *
      * Utiliza ExecutorService para ejecutar los repartidores
      * mediante un pool de tres hilos.
+     *
+     * @param notificador permite informar los cambios de estado
+     *                    de los pedidos durante el procesamiento
      */
     public void procesarPedidos(Consumer<Pedido> notificador) {
 
         if (zonaDeCarga.estaVacia()) {
-
-            System.out.println(
-                    "\n[INFO] No hay pedidos pendientes en la zona de carga."
-            );
-
             return;
         }
-
-        System.out.println("\n================================");
-        System.out.println("       PROCESANDO PEDIDOS");
-        System.out.println("================================");
 
         ExecutorService executor =
                 Executors.newFixedThreadPool(3);
@@ -327,10 +275,6 @@ public class GestorPedidos {
 
             Thread.currentThread().interrupt();
         }
-
-        System.out.println("\n================================");
-        System.out.println("       [Zona de carga vacia]");
-        System.out.println("================================");
     }
 
     /**
@@ -342,11 +286,13 @@ public class GestorPedidos {
     public void procesarPedidos() {
         procesarPedidos(null);
     }
+
     /**
      * Inicia la entrega de un pedido específico.
      *
      * @param id identificador del pedido
      * @param notificador permite informar cambios de estado
+     *                    del pedido
      */
     public void iniciarEntrega(
             int id,
@@ -356,21 +302,11 @@ public class GestorPedidos {
                 historialPedidos.buscarPedido(id);
 
         if (pedido == null) {
-
-            System.out.println(
-                    "[ERROR] No existe un pedido con ese ID."
-            );
-
             return;
         }
 
         if (pedido.getEstado()
                 != EstadoPedido.PENDIENTE) {
-
-            System.out.println(
-                    "[ERROR] El pedido no está pendiente."
-            );
-
             return;
         }
 

@@ -17,14 +17,14 @@ public class PedidoExpress extends Pedido {
      *
      * @param idPedido identificador del pedido
      * @param direccionEntrega dirección donde se realizará la entrega
-     * @param distanaciaKm distancia de entrega en kilómetros
+     * @param distanciaKm distancia de entrega en kilómetros
      */
     public PedidoExpress(
             int idPedido,
             String direccionEntrega,
-            double distanaciaKm) {
+            double distanciaKm) {
 
-        super(idPedido, direccionEntrega, distanaciaKm);
+        super(idPedido, direccionEntrega, distanciaKm);
     }
 
     /**
@@ -45,13 +45,7 @@ public class PedidoExpress extends Pedido {
      */
     @Override
     public void asignarRepartidor() {
-
         setRepartidor("Cristian Contreras");
-
-        System.out.println(
-                "Repartidor asignado Express: "
-                        + getRepartidor()
-        );
     }
 
     /**

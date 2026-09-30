@@ -6,6 +6,16 @@ import cl.speedfast.model.Pedido;
 import javax.swing.*;
 import java.sql.SQLException;
 
+/**
+ * Ventana utilizada para editar los datos de un pedido
+ * registrado en el sistema SpeedFast.
+ *
+ * Permite modificar la dirección y la distancia del pedido
+ * y guardar los cambios en la base de datos mediante PedidoDAO.
+ *
+ * @author Cristian Contreras
+ * @version 1.0
+ */
 public class EditarRegistroPedido extends JFrame {
 
     private JPanel formEditarRegistroPedido;
@@ -23,6 +33,14 @@ public class EditarRegistroPedido extends JFrame {
     private final PedidoDAO pedidoDAO;
     private final Pedido pedido;
 
+    /**
+     * Constructor de la ventana de edición de pedidos.
+     *
+     * @param listaPedidos ventana que contiene la lista de pedidos
+     * @param pedidoDAO objeto encargado de actualizar el pedido
+     *                  en la base de datos
+     * @param pedido pedido que será editado
+     */
     public EditarRegistroPedido(
             ListaPedidos listaPedidos,
             PedidoDAO pedidoDAO,
@@ -45,13 +63,18 @@ public class EditarRegistroPedido extends JFrame {
                 e -> guardarCambios()
         );
 
-        xButton.addActionListener(e -> cancelarEdicion());
+        xButton.addActionListener(
+                e -> cancelarEdicion()
+        );
     }
 
-    // =========================================================
-    // CARGAR DATOS DEL PEDIDO
-    // =========================================================
-
+    /**
+     * Carga en el formulario los datos actuales
+     * del pedido seleccionado.
+     *
+     * Se cargan el tipo, la dirección y la distancia
+     * registrada para el pedido.
+     */
     private void cargarDatos() {
 
         cbEditarIngresePedido.removeAllItems();
@@ -73,10 +96,16 @@ public class EditarRegistroPedido extends JFrame {
         );
     }
 
-    // =========================================================
-    // GUARDAR CAMBIOS
-    // =========================================================
-
+    /**
+     * Valida los datos ingresados y actualiza el pedido
+     * en la base de datos.
+     *
+     * Verifica que la dirección no esté vacía y que la
+     * distancia sea un número válido mayor que cero.
+     *
+     * Si la actualización se realiza correctamente,
+     * se recarga la lista de pedidos.
+     */
     private void guardarCambios() {
 
         String direccion =
@@ -173,10 +202,10 @@ public class EditarRegistroPedido extends JFrame {
         }
     }
 
-    // =========================================================
-    // CANCELAR
-    // =========================================================
-
+    /**
+     * Solicita confirmación al usuario antes de cerrar
+     * la ventana sin guardar los cambios.
+     */
     private void cancelarEdicion() {
 
         int respuesta =

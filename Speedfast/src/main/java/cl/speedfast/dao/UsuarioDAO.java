@@ -10,8 +10,24 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Acceso a datos de los usuarios mediante JDBC.
+ *
+ * Se encarga de registrar, autenticar, listar, actualizar
+ * y eliminar usuarios de la base de datos.
+ *
+ * @author Cristian Contreras
+ * @version 1.0
+ */
 public class UsuarioDAO {
 
+    /**
+     * Guarda un nuevo usuario en la base de datos.
+     *
+     * @param usuario usuario que se desea registrar
+     * @return true si el usuario fue guardado correctamente;
+     *         false si ocurre un error
+     */
     public boolean guardar(Usuario usuario) {
 
         String sql = """
@@ -42,7 +58,15 @@ public class UsuarioDAO {
         }
     }
 
-
+    /**
+     * Autentica un usuario utilizando su nombre de usuario
+     * y contraseña.
+     *
+     * @param nombreUsuario nombre del usuario
+     * @param contrasenia contraseña del usuario
+     * @return usuario autenticado o null si las credenciales
+     *         no son válidas
+     */
     public Usuario autenticar(
             String nombreUsuario,
             String contrasenia) {
@@ -82,11 +106,12 @@ public class UsuarioDAO {
         return null;
     }
 
-
-    // =========================================================
-    // LISTAR USUARIOS
-    // =========================================================
-
+    /**
+     * Obtiene todos los usuarios registrados
+     * en la base de datos.
+     *
+     * @return lista de usuarios registrados
+     */
     public List<Usuario> listarTodos() {
 
         List<Usuario> usuarios = new ArrayList<>();
@@ -122,11 +147,14 @@ public class UsuarioDAO {
         return usuarios;
     }
 
-
-    // =========================================================
-    // ACTUALIZAR USUARIO
-    // =========================================================
-
+    /**
+     * Actualiza los datos de un usuario existente.
+     *
+     * @param nombreUsuarioOriginal nombre de usuario original
+     * @param usuario usuario con los nuevos datos
+     * @return true si el usuario fue actualizado correctamente;
+     *         false si ocurre un error
+     */
     public boolean actualizar(
             String nombreUsuarioOriginal,
             Usuario usuario) {
@@ -162,11 +190,13 @@ public class UsuarioDAO {
         }
     }
 
-
-    // =========================================================
-    // ELIMINAR USUARIO
-    // =========================================================
-
+    /**
+     * Elimina un usuario de la base de datos.
+     *
+     * @param nombreUsuario nombre del usuario que se desea eliminar
+     * @return true si el usuario fue eliminado correctamente;
+     *         false si ocurre un error
+     */
     public boolean eliminar(String nombreUsuario) {
 
         String sql = """

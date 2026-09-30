@@ -1,9 +1,21 @@
 package cl.speedfast.vista;
 
-import cl.speedfast.controlador.ControladorUsuarios;
+import cl.speedfast.dao.UsuarioDAO;
+import cl.speedfast.model.Usuario;
 
 import javax.swing.*;
 
+/**
+ * Ventana utilizada para registrar nuevos usuarios
+ * en el sistema SpeedFast.
+ *
+ * Permite ingresar nombre de usuario, contraseña y rol,
+ * utilizando UsuarioDAO para guardar la información
+ * en la base de datos.
+ *
+ * @author Cristian Contreras
+ * @version 1.0
+ */
 public class RegistroUsuarios extends JDialog {
 
     private JPanel formRegistroUsuarios;
@@ -17,13 +29,19 @@ public class RegistroUsuarios extends JDialog {
     private JButton xButton;
     private JLabel txtLogo;
 
-    private final ControladorUsuarios controladorUsuarios;
+    private final UsuarioDAO usuarioDAO;
 
+    /**
+     * Constructor de la ventana de registro de usuarios.
+     *
+     * @param padre ventana principal desde la cual se abre el diálogo
+     * @param usuarioDAO DAO encargado de gestionar los usuarios
+     */
     public RegistroUsuarios(
             JFrame padre,
-            ControladorUsuarios controladorUsuarios) {
+            UsuarioDAO usuarioDAO) {
 
-        this.controladorUsuarios = controladorUsuarios;
+        this.usuarioDAO = usuarioDAO;
 
         setTitle("Registrar usuario");
         setContentPane(formRegistroUsuarios);
@@ -43,6 +61,9 @@ public class RegistroUsuarios extends JDialog {
         );
     }
 
+    /**
+     * Carga los roles disponibles en el ComboBox.
+     */
     private void cargarRoles() {
 
         comboBox1.removeAllItems();
@@ -51,6 +72,10 @@ public class RegistroUsuarios extends JDialog {
         comboBox1.addItem("administrador");
     }
 
+    /**
+     * Valida los datos ingresados y registra
+     * el nuevo usuario mediante UsuarioDAO.
+     */
     private void registrarUsuario() {
 
         String nombreUsuario =
@@ -88,12 +113,15 @@ public class RegistroUsuarios extends JDialog {
             return;
         }
 
-        boolean registrado =
-                controladorUsuarios.registrarUsuario(
+        Usuario usuario =
+                new Usuario(
                         nombreUsuario,
                         contrasenia,
                         rol
                 );
+
+        boolean registrado =
+                usuarioDAO.guardar(usuario);
 
         if (registrado) {
 
@@ -119,6 +147,9 @@ public class RegistroUsuarios extends JDialog {
         }
     }
 
+    /**
+     * Limpia los campos del formulario.
+     */
     private void limpiarCampos() {
 
         jtfNombre.setText("");

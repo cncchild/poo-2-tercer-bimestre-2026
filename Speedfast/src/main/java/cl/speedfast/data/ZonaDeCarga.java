@@ -2,6 +2,7 @@ package cl.speedfast.data;
 
 import cl.speedfast.model.EstadoPedido;
 import cl.speedfast.model.Pedido;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,6 +11,9 @@ import java.util.List;
  *
  * Permite agregar y retirar pedidos de forma segura
  * cuando varios repartidores trabajan simultáneamente.
+ *
+ * Utiliza métodos sincronizados para controlar el acceso
+ * concurrente a la lista de pedidos.
  *
  * @author Cristian Contreras
  * @version 1.0
@@ -20,6 +24,8 @@ public class ZonaDeCarga {
 
     /**
      * Constructor de la zona de carga.
+     *
+     * Inicializa la lista que almacenará los pedidos.
      */
     public ZonaDeCarga() {
         pedidos = new ArrayList<>();
@@ -28,17 +34,13 @@ public class ZonaDeCarga {
     /**
      * Agrega un pedido a la zona de carga.
      *
+     * El método synchronized garantiza que el acceso
+     * a la lista sea seguro cuando existen varios hilos.
+     *
      * @param pedido pedido que será agregado
      */
     public synchronized void agregarPedido(Pedido pedido) {
-
         pedidos.add(pedido);
-
-        System.out.println(
-                "Pedido #" + pedido.getIdPedido()
-                        + " agregado. Destino: "
-                        + pedido.getDireccionEntrega()
-        );
     }
 
     /**
@@ -67,8 +69,13 @@ public class ZonaDeCarga {
     }
 
     /**
-     * elimina un pedido
-     * @param id
+     * Elimina un pedido de la zona de carga mediante
+     * su identificador.
+     *
+     * El método synchronized garantiza un acceso seguro
+     * a la lista cuando existen varios hilos.
+     *
+     * @param id identificador del pedido que se desea eliminar
      */
     public synchronized void eliminarPedido(int id) {
 
@@ -78,44 +85,29 @@ public class ZonaDeCarga {
 
             if (pedido.getIdPedido() == id) {
                 pedidos.remove(i);
-
-                System.out.println(
-                        "Pedido #" + id
-                                + " eliminado de la zona de carga."
-                );
-
                 return;
             }
         }
     }
+
     /**
      * Indica si la zona de carga está vacía.
      *
-     * @return true si no quedan pedidos
+     * @return true si no existen pedidos en la zona de carga,
+     *         false en caso contrario
      */
     public synchronized boolean estaVacia() {
         return pedidos.isEmpty();
     }
+
     /**
-     * Muestra los pedidos que se encuentran actualmente
-     * en la zona de carga.
+     * Mantiene el método utilizado por las funcionalidades
+     * desarrolladas en semanas anteriores.
+     *
+     * La visualización actual de los pedidos se realiza
+     * mediante la interfaz gráfica de Swing.
      */
     public synchronized void mostrarPedidos() {
-
-        if (pedidos.isEmpty()) {
-            System.out.println("La zona de carga está vacía.");
-            return;
-        }
-
-        for (Pedido pedido : pedidos) {
-
-            System.out.println(
-                    "Pedido #" + pedido.getIdPedido()
-                            + " - Destino: "
-                            + pedido.getDireccionEntrega()
-                            + " - Estado: "
-                            + pedido.getEstado()
-            );
-        }
+        // La visualización se realiza actualmente mediante Swing.
     }
 }

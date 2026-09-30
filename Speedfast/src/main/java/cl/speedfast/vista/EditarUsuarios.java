@@ -5,6 +5,17 @@ import cl.speedfast.model.Usuario;
 
 import javax.swing.*;
 
+/**
+ * Ventana utilizada para editar los datos de un usuario
+ * registrado en el sistema SpeedFast.
+ *
+ * Permite modificar el nombre de usuario, la contraseña
+ * y el rol asignado. Los cambios son almacenados mediante
+ * UsuarioDAO.
+ *
+ * @author Cristian Contreras
+ * @version 1.0
+ */
 public class EditarUsuarios extends JFrame {
 
     private JPanel panel1;
@@ -22,6 +33,14 @@ public class EditarUsuarios extends JFrame {
     private final UsuarioDAO usuarioDAO;
     private final String nombreUsuarioOriginal;
 
+    /**
+     * Constructor de la ventana de edición de usuarios.
+     *
+     * @param listaUsuarios ventana que contiene la lista de usuarios
+     * @param usuarioDAO objeto encargado de actualizar el usuario
+     *                   en la base de datos
+     * @param usuario usuario que será editado
+     */
     public EditarUsuarios(
             ListaUsuarios listaUsuarios,
             UsuarioDAO usuarioDAO,
@@ -51,6 +70,10 @@ public class EditarUsuarios extends JFrame {
         );
     }
 
+    /**
+     * Carga los roles disponibles en el selector
+     * de roles del formulario.
+     */
     private void cargarRoles() {
 
         jcbEditorRol.removeAllItems();
@@ -59,6 +82,12 @@ public class EditarUsuarios extends JFrame {
         jcbEditorRol.addItem("usuario");
     }
 
+    /**
+     * Carga en el formulario los datos actuales
+     * del usuario seleccionado.
+     *
+     * @param usuario usuario cuyos datos serán cargados
+     */
     private void cargarDatos(Usuario usuario) {
 
         jtfNombre.setText(
@@ -74,6 +103,13 @@ public class EditarUsuarios extends JFrame {
         );
     }
 
+    /**
+     * Valida y actualiza los datos del usuario.
+     *
+     * Comprueba que el nombre de usuario y la contraseña
+     * no estén vacíos. Luego crea un usuario actualizado
+     * y solicita a UsuarioDAO guardar los cambios.
+     */
     private void editarUsuario() {
 
         String nombreUsuario =
@@ -138,6 +174,10 @@ public class EditarUsuarios extends JFrame {
         }
     }
 
+    /**
+     * Solicita confirmación antes de cerrar la ventana
+     * sin guardar los cambios realizados.
+     */
     private void cerrarEditor() {
 
         int respuesta =

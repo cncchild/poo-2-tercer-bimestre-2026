@@ -15,7 +15,7 @@ public class Repartidor {
     private String nombre;
 
     /**
-     * Constructor completo.
+     * Constructor completo de la clase Repartidor.
      *
      * @param id identificador del repartidor
      * @param nombre nombre del repartidor
@@ -26,7 +26,7 @@ public class Repartidor {
     }
 
     /**
-     * Obtiene el identificador.
+     * Obtiene el identificador del repartidor.
      *
      * @return identificador del repartidor
      */
@@ -35,7 +35,7 @@ public class Repartidor {
     }
 
     /**
-     * Obtiene el nombre.
+     * Obtiene el nombre del repartidor.
      *
      * @return nombre del repartidor
      */
@@ -46,12 +46,17 @@ public class Repartidor {
     /**
      * Modifica el nombre del repartidor.
      *
-     * @param nombre nuevo nombre
+     * @param nombre nuevo nombre del repartidor
      */
     public void setNombre(String nombre) {
         this.nombre = nombre;
     }
 
+    /**
+     * Obtiene una representación textual del repartidor.
+     *
+     * @return nombre del repartidor
+     */
     @Override
     public String toString() {
         return nombre;

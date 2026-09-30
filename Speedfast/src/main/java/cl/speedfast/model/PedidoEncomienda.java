@@ -17,14 +17,14 @@ public class PedidoEncomienda extends Pedido {
      *
      * @param idPedido identificador del pedido
      * @param direccionEntrega dirección donde se realizará la entrega
-     * @param distanaciaKm distancia de entrega en kilómetros
+     * @param distanciaKm distancia de entrega en kilómetros
      */
     public PedidoEncomienda(
             int idPedido,
             String direccionEntrega,
-            double distanaciaKm) {
+            double distanciaKm) {
 
-        super(idPedido, direccionEntrega, distanaciaKm);
+        super(idPedido, direccionEntrega, distanciaKm);
     }
 
     /**
@@ -53,19 +53,9 @@ public class PedidoEncomienda extends Pedido {
 
             setRepartidor("Andres Beltran");
 
-            System.out.println(
-                    "Repartidor asignado: "
-                            + getRepartidor()
-            );
-
         } else {
 
             setRepartidor("Camilo Apablaza");
-
-            System.out.println(
-                    "Repartidor asignado: "
-                            + getRepartidor()
-            );
         }
     }
 

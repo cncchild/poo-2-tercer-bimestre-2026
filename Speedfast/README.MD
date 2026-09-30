@@ -1898,8 +1898,1157 @@ De esta forma, SpeedFast evoluciona desde una aplicación orientada a objetos co
 
 ---
 
+````md
+# Semana 8 – Desarrollo del ciclo funcional completo, CRUD y refactorización de SpeedFast
+
+## Descripción
+
+Durante la **Semana 8** se completó y consolidó el desarrollo del proyecto **SpeedFast**, integrando las funcionalidades desarrolladas durante las semanas anteriores en una aplicación Java con interfaz gráfica, persistencia de datos y operaciones CRUD mediante JDBC.
+
+El objetivo principal fue completar el ciclo funcional de la aplicación, permitiendo gestionar pedidos, repartidores, entregas y usuarios mediante una interfaz desarrollada con **Java Swing**, conectada a una base de datos **MySQL** utilizando el patrón **DAO**.
+
+Durante esta semana también se realizó una revisión y refactorización del código para mejorar la organización, reducir dependencias innecesarias y documentar las principales clases mediante **JavaDoc**.
+
+El flujo general de la aplicación quedó:
+
+```text
+Login
+  ↓
+Home
+  ↓
+Gestión de módulos
+  ↓
+DAO
+  ↓
+JDBC
+  ↓
+MySQL
+````
+
+---
+
+## Ciclo funcional completo
+
+Uno de los principales objetivos de la Semana 8 fue completar el ciclo funcional de SpeedFast.
+
+El sistema permite realizar las operaciones principales sobre las entidades almacenadas en la base de datos:
+
+```text
+Crear
+  ↓
+Leer
+  ↓
+Actualizar
+  ↓
+Eliminar
+```
+
+Estas operaciones se aplican principalmente a:
+
+```text
+Usuarios
+Pedidos
+Repartidores
+Entregas
+```
+
+La interfaz gráfica permite realizar estas operaciones mediante formularios, tablas, botones y ventanas de diálogo.
+
+---
+
+# Gestión de pedidos
+
+La gestión de pedidos se realiza mediante las ventanas:
+
+```text
+RegistroPedidos
+ListaPedidos
+EditarRegistroPedido
+```
+
+y el DAO:
+
+```text
+PedidoDAO
+```
+
+### Registrar pedido
+
+La ventana `RegistroPedidos` permite ingresar:
+
+```text
+Dirección de entrega
+Distancia en kilómetros
+Tipo de pedido
+```
+
+Los tipos disponibles son:
+
+```text
+COMIDA
+ENCOMIENDA
+EXPRESS
+```
+
+El sistema crea la instancia correspondiente:
+
+```text
+PedidoComida
+PedidoEncomienda
+PedidoExpress
+```
+
+manteniendo el polimorfismo desarrollado durante las primeras semanas.
+
+Posteriormente el pedido se almacena mediante:
+
+```java
+pedidoDAO.guardar(pedido);
+```
+
+El flujo es:
+
+```text
+Formulario
+    ↓
+Validación
+    ↓
+Crear objeto Pedido
+    ↓
+PedidoDAO
+    ↓
+PreparedStatement
+    ↓
+MySQL
+```
+
+---
+
+## Listar pedidos
+
+La ventana `ListaPedidos` consulta los pedidos almacenados mediante:
+
+```java
+pedidoDAO.listarTodos();
+```
+
+La información se muestra mediante un `JTable`.
+
+Las columnas principales son:
+
+```text
+ID
+Dirección
+Tipo
+Distancia
+Tiempo
+Repartidor
+Estado
+```
+
+La tabla utiliza `DefaultTableModel` y permite actualizar la información después de realizar operaciones sobre los pedidos.
+
+También se incorporó selección de filas para realizar operaciones sobre un pedido específico.
+
+---
+
+## Editar pedidos
+
+La ventana:
+
+```text
+EditarRegistroPedido
+```
+
+permite modificar información de un pedido seleccionado.
+
+Los datos que pueden actualizarse incluyen:
+
+```text
+Dirección
+Distancia
+```
+
+La modificación se realiza mediante:
+
+```java
+pedidoDAO.actualizar(pedido);
+```
+
+De esta manera, los cambios realizados en la interfaz también quedan almacenados en MySQL.
+
+---
+
+## Eliminación de pedidos
+
+Se incorporaron dos comportamientos relacionados con la eliminación de pedidos.
+
+### Cancelación lógica
+
+Un pedido puede cambiar a:
+
+```text
+CANCELADO
+```
+
+mediante las reglas de negocio definidas en la clase `Pedido`.
+
+Esto permite conservar el registro del pedido en la base de datos.
+
+### Eliminación física
+
+También se incorporó la posibilidad de eliminar físicamente un pedido mediante:
+
+```java
+pedidoDAO.eliminar(id);
+```
+
+Antes de eliminar se solicita confirmación al usuario mediante `JOptionPane`.
+
+---
+
+# Estados de los pedidos
+
+Se mantiene el enum:
+
+```java
+EstadoPedido
+```
+
+con los siguientes estados:
+
+```text
+PENDIENTE
+EN_REPARTO
+ENTREGADO
+CANCELADO
+```
+
+El flujo normal de una entrega es:
+
+```text
+PENDIENTE
+    ↓
+EN_REPARTO
+    ↓
+ENTREGADO
+```
+
+Los cambios de estado se almacenan en la base de datos mediante:
+
+```java
+pedidoDAO.actualizarEstado(
+    id,
+    EstadoPedido.EN_REPARTO
+);
+```
+
+Esto permite mantener sincronizado el estado mostrado en la interfaz con el estado almacenado en MySQL.
+
+---
+
+# Inicio de una entrega
+
+Se completó el proceso de inicio de entrega desde la lista de pedidos.
+
+El usuario selecciona un pedido y presiona:
+
+```text
+Iniciar Entrega
+```
+
+El sistema verifica que exista un pedido seleccionado y que pueda iniciar una nueva entrega.
+
+Posteriormente consulta los repartidores disponibles mediante:
+
+```java
+repartidorDAO.listarTodos();
+```
+
+Los repartidores se muestran en un `JComboBox`.
+
+El usuario selecciona el repartidor que realizará la entrega.
+
+El proceso completo es:
+
+```text
+Seleccionar pedido
+       ↓
+Iniciar entrega
+       ↓
+Consultar repartidores
+       ↓
+Seleccionar repartidor
+       ↓
+Asignar repartidor
+       ↓
+Cambiar estado a EN_REPARTO
+       ↓
+Crear Entrega
+       ↓
+Guardar Entrega
+       ↓
+Simular entrega
+       ↓
+Cambiar estado a ENTREGADO
+```
+
+---
+
+# Gestión de repartidores
+
+La gestión de repartidores se realiza mediante:
+
+```text
+ListaRepartidores
+RepartidorDAO
+```
+
+El sistema permite:
+
+```text
+Registrar repartidor
+Listar repartidores
+Editar repartidor
+Eliminar repartidor
+```
+
+La información almacenada corresponde principalmente a:
+
+```text
+ID
+Nombre
+```
+
+### Registrar repartidor
+
+Se solicita el nombre mediante un formulario de diálogo.
+
+Después de validar que el nombre no esté vacío, se crea un objeto:
+
+```java
+Repartidor
+```
+
+y se guarda mediante:
+
+```java
+repartidorDAO.guardar(repartidor);
+```
+
+### Editar repartidor
+
+El usuario selecciona un registro de la tabla y modifica su nombre.
+
+El cambio se guarda mediante:
+
+```java
+repartidorDAO.actualizar(repartidor);
+```
+
+### Eliminar repartidor
+
+Se selecciona un repartidor y se solicita confirmación antes de ejecutar:
+
+```java
+repartidorDAO.eliminar(id);
+```
+
+---
+
+# Gestión de entregas
+
+La gestión de entregas se realiza mediante:
+
+```text
+ListaEntrega
+EntregaDAO
+```
+
+La tabla muestra:
+
+```text
+ID
+Pedido
+Repartidor
+Fecha
+Hora
+```
+
+Las entregas se crean como parte del proceso:
+
+```text
+ListaPedidos
+    ↓
+Iniciar Entrega
+    ↓
+Seleccionar repartidor
+    ↓
+Crear Entrega
+    ↓
+EntregaDAO
+```
+
+La ventana `ListaEntrega` permite:
+
+```text
+Listar entregas
+Editar entregas
+Eliminar entregas
+```
+
+También mantiene un botón de agregar entrega que informa al usuario que la creación se realiza desde la gestión de pedidos.
+
+El mensaje mostrado es:
+
+```text
+La creación de entregas se realiza desde el Home, administrar Pedidos.
+```
+
+Esto evita crear entregas sin asociarlas correctamente a un pedido y un repartidor.
+
+---
+
+# CRUD de entregas
+
+Las operaciones de entrega utilizan:
+
+```java
+EntregaDAO
+```
+
+Las funcionalidades implementadas son:
+
+```text
+Guardar
+Listar
+Actualizar
+Eliminar
+```
+
+Cada entrega contiene:
+
+```text
+ID
+ID del pedido
+ID del repartidor
+Fecha
+Hora
+```
+
+Las relaciones se mantienen mediante las claves foráneas:
+
+```text
+entrega.id_pedido
+       ↓
+pedido.id
+
+entrega.id_repartidor
+       ↓
+repartidor.id
+```
+
+---
+
+# Gestión de usuarios
+
+Durante esta semana también se completó la gestión de usuarios mediante:
+
+```text
+UsuarioDAO
+ListaUsuarios
+RegistroUsuarios
+EditarUsuarios
+```
+
+Las operaciones disponibles son:
+
+```text
+Registrar
+Listar
+Editar
+Eliminar
+Autenticar
+```
+
+Los usuarios contienen:
+
+```text
+Nombre de usuario
+Contraseña
+Rol
+```
+
+Los roles disponibles son:
+
+```text
+usuario
+administrador
+```
+
+---
+
+# Inicio de sesión
+
+La ventana `Login` utiliza directamente:
+
+```java
+UsuarioDAO
+```
+
+para autenticar las credenciales.
+
+El proceso es:
+
+```text
+Ingresar usuario
+       ↓
+Ingresar contraseña
+       ↓
+Validar campos
+       ↓
+UsuarioDAO.autenticar()
+       ↓
+Consultar MySQL
+       ↓
+Usuario encontrado
+       ↓
+Abrir Home
+```
+
+Si las credenciales no son válidas, el sistema informa al usuario mediante `JOptionPane`.
+
+---
+
+# Refactorización de usuarios
+
+Durante la Semana 8 se comenzó a eliminar la dependencia de la clase:
+
+```text
+ControladorUsuarios
+```
+
+Anteriormente la comunicación tenía una capa adicional:
+
+```text
+Login
+  ↓
+ControladorUsuarios
+  ↓
+UsuarioDAO
+  ↓
+MySQL
+```
+
+La estructura fue simplificada a:
+
+```text
+Login
+  ↓
+UsuarioDAO
+  ↓
+MySQL
+```
+
+La misma modificación se aplicó a las ventanas relacionadas con usuarios.
+
+La estructura actual es:
+
+```text
+Login
+  ↓
+Home
+  ↓
+ListaUsuarios
+  ↓
+RegistroUsuarios / EditarUsuarios
+  ↓
+UsuarioDAO
+  ↓
+MySQL
+```
+
+Esto reduce el acoplamiento y evita mantener una clase intermediaria que ya no es necesaria.
+
+---
+
+# Administración de usuarios
+
+Desde `Home` se puede acceder a la gestión de usuarios.
+
+La ventana `ListaUsuarios` permite:
+
+```text
+Ver usuarios
+Agregar usuarios
+Editar usuarios
+Eliminar usuarios
+```
+
+La información se muestra mediante una tabla Swing.
+
+Las operaciones se realizan directamente mediante `UsuarioDAO`.
+
+---
+
+# Control de acceso mediante roles
+
+El sistema mantiene el control de acceso según el rol del usuario.
+
+El rol se obtiene desde la base de datos durante la autenticación y se utiliza posteriormente para configurar las opciones disponibles en la interfaz.
+
+El flujo es:
+
+```text
+Login
+  ↓
+UsuarioDAO
+  ↓
+Usuario
+  ↓
+Nombre + Rol
+  ↓
+Home
+  ↓
+Permisos
+```
+
+Esto permite mantener diferentes funcionalidades según el tipo de usuario.
+
+---
+
+# Validación de datos
+
+Durante esta semana se revisaron las validaciones utilizadas en los formularios.
+
+Entre las validaciones implementadas se encuentran:
+
+```text
+Campos obligatorios
+Dirección no vacía
+Distancia válida
+Nombre de usuario obligatorio
+Contraseña obligatoria
+Nombre de repartidor obligatorio
+Selección de registros antes de editar
+Selección de registros antes de eliminar
+Confirmación antes de eliminar
+Fechas válidas
+Horas válidas
+```
+
+Cuando se detecta un dato incorrecto se utiliza:
+
+```java
+JOptionPane.showMessageDialog(...)
+```
+
+para informar al usuario.
+
+---
+
+# Manejo de excepciones
+
+Las operaciones relacionadas con JDBC utilizan manejo de excepciones mediante:
+
+```java
+SQLException
+```
+
+Además, se utiliza `try-with-resources` para administrar recursos JDBC.
+
+Los principales recursos controlados son:
+
+```text
+Connection
+PreparedStatement
+ResultSet
+```
+
+Esto permite cerrar automáticamente los recursos después de realizar las operaciones con la base de datos.
+
+---
+
+# PreparedStatement y ResultSet
+
+Los DAO utilizan `PreparedStatement` para ejecutar las consultas SQL.
+
+Ejemplo:
+
+```java
+PreparedStatement ps =
+        conexion.prepareStatement(sql);
+```
+
+Los resultados de las consultas se obtienen mediante:
+
+```java
+ResultSet
+```
+
+Los registros recuperados desde MySQL son convertidos nuevamente en objetos Java.
+
+El flujo es:
+
+```text
+MySQL
+  ↓
+ResultSet
+  ↓
+DAO
+  ↓
+Objeto Java
+  ↓
+Interfaz gráfica
+```
+
+---
+
+# Separación de responsabilidades
+
+La arquitectura del proyecto quedó organizada separando las principales responsabilidades.
+
+```text
+MODEL
+  ↓
+Entidades y lógica de negocio
+
+DAO
+  ↓
+Acceso a la base de datos
+
+CONEXION
+  ↓
+Conexión JDBC con MySQL
+
+VISTA
+  ↓
+Interfaz gráfica Swing
+```
+
+Esta separación permite modificar una parte del sistema sin tener que modificar directamente las demás.
+
+---
+
+# Documentación mediante JavaDoc
+
+Durante la Semana 8 también se realizó una revisión de la documentación del código.
+
+Se incorporaron comentarios JavaDoc en las principales clases y métodos del proyecto.
+
+La documentación incluye:
+
+```text
+Descripción de clases
+Descripción de constructores
+Parámetros
+Valores de retorno
+Excepciones
+Responsabilidad de los métodos
+```
+
+Entre las clases documentadas se encuentran:
+
+```text
+ConexionBD
+Pedido
+PedidoComida
+PedidoEncomienda
+PedidoExpress
+EstadoPedido
+Repartidor
+Entrega
+Usuario
+
+PedidoDAO
+RepartidorDAO
+EntregaDAO
+UsuarioDAO
+
+ListaPedidos
+RegistroPedidos
+EditarRegistroPedido
+ListaUsuarios
+RegistroUsuarios
+EditarUsuarios
+ListaRepartidores
+ListaEntrega
+Home
+Login
+```
+
+La documentación permite comprender con mayor facilidad la responsabilidad de cada componente del sistema.
+
+---
+
+# Limpieza y refactorización del proyecto
+
+Se realizó una revisión de clases correspondientes a etapas anteriores del proyecto.
+
+La aplicación actualmente utiliza como flujo principal:
+
+```text
+Main
+  ↓
+Login
+  ↓
+Home
+  ↓
+Vistas Swing
+  ↓
+DAO
+  ↓
+MySQL
+```
+
+Las clases antiguas que ya no participan del flujo principal fueron revisadas para determinar si podían ser eliminadas sin afectar el funcionamiento actual.
+
+También se realizó una búsqueda global de referencias antes de eliminar clases para evitar errores de compilación.
+
+---
+
+# Estructura actual del proyecto
+
+La estructura principal del proyecto quedó organizada de la siguiente manera:
+
+```text
+src/
+
+└── main/
+
+    └── java/
+
+        └── cl/
+
+            └── speedfast/
+
+                ├── Main.java
+                │
+                ├── conexion/
+                │   └── ConexionBD.java
+                │
+                ├── dao/
+                │   ├── PedidoDAO.java
+                │   ├── RepartidorDAO.java
+                │   ├── EntregaDAO.java
+                │   └── UsuarioDAO.java
+                │
+                ├── model/
+                │   ├── Pedido.java
+                │   ├── PedidoComida.java
+                │   ├── PedidoEncomienda.java
+                │   ├── PedidoExpress.java
+                │   ├── EstadoPedido.java
+                │   ├── Repartidor.java
+                │   ├── Entrega.java
+                │   └── Usuario.java
+                │
+                ├── interfaces/
+                │   ├── Despachable.java
+                │   ├── Cancelable.java
+                │   └── Rastreable.java
+                │
+                ├── data/
+                │   ├── GestorPedidos.java
+                │   ├── HistorialPedidos.java
+                │   └── ZonaDeCarga.java
+                │
+                ├── tareas/
+                │   └── Repartidor.java
+                │
+                └── vista/
+                    ├── Login.java
+                    ├── Home.java
+                    ├── ListaPedidos.java
+                    ├── RegistroPedidos.java
+                    ├── EditarRegistroPedido.java
+                    ├── ListaUsuarios.java
+                    ├── RegistroUsuarios.java
+                    ├── EditarUsuarios.java
+                    ├── ListaRepartidores.java
+                    └── ListaEntrega.java
+```
+
+---
+
+# Flujo general de SpeedFast
+
+El funcionamiento general de la aplicación quedó:
+
+```text
+                         SPEEDFAST
+                             │
+                             ▼
+                           LOGIN
+                             │
+                             ▼
+                            HOME
+                             │
+          ┌──────────────────┼──────────────────┐
+          │                  │                  │
+          ▼                  ▼                  ▼
+       PEDIDOS          USUARIOS          REPARTIDORES
+          │                  │                  │
+          │                  │                  │
+          ▼                  ▼                  ▼
+      PedidoDAO         UsuarioDAO       RepartidorDAO
+          │                  │                  │
+          └──────────────────┼──────────────────┘
+                             │
+                             ▼
+                         ConexionBD
+                             │
+                             ▼
+                           JDBC
+                             │
+                             ▼
+                       speedfast_db
+                             │
+              ┌──────────────┼──────────────┐
+              ▼              ▼              ▼
+            pedido       repartidor      entrega
+```
+
+---
+
+# Flujo completo de una entrega
+
+El ciclo principal de una entrega quedó:
+
+```text
+Registrar pedido
+       ↓
+PENDIENTE
+       ↓
+Seleccionar pedido
+       ↓
+Iniciar entrega
+       ↓
+Seleccionar repartidor
+       ↓
+Asignar repartidor
+       ↓
+EN_REPARTO
+       ↓
+Crear registro de entrega
+       ↓
+Guardar en MySQL
+       ↓
+Simular procesamiento
+       ↓
+ENTREGADO
+```
+
+De esta forma, un pedido queda relacionado con el repartidor que realiza la entrega y la información queda almacenada de forma persistente.
+
+---
+
+# Conceptos incorporados en Semana 8
+
+* CRUD.
+* Crear registros.
+* Consultar registros.
+* Actualizar registros.
+* Eliminar registros.
+* JDBC.
+* MySQL.
+* `PreparedStatement`.
+* `ResultSet`.
+* `SQLException`.
+* `try-with-resources`.
+* Patrón DAO.
+* Persistencia de datos.
+* Relaciones mediante claves foráneas.
+* Java Swing.
+* `JFrame`.
+* `JDialog`.
+* `JTable`.
+* `DefaultTableModel`.
+* `JTextField`.
+* `JPasswordField`.
+* `JComboBox`.
+* `JButton`.
+* `JOptionPane`.
+* Validación de datos.
+* Gestión de usuarios.
+* Autenticación.
+* Roles de usuario.
+* Gestión de pedidos.
+* Gestión de repartidores.
+* Gestión de entregas.
+* Actualización de estados.
+* Refactorización.
+* Reducción de acoplamiento.
+* Separación de responsabilidades.
+* JavaDoc.
+* Integración entre GUI, DAO y MySQL.
+
+---
+
+# Evolución del proyecto
+
+```text
+Semana 1
+   ↓
+POO, clases, objetos, herencia,
+encapsulamiento y polimorfismo
+
+   ↓
+
+Semana 2
+   ↓
+Abstracción, métodos abstractos,
+Template Method y paquetes
+
+   ↓
+
+Semana 3
+   ↓
+Interfaces, colecciones,
+historial y estados
+
+   ↓
+
+Semana 4
+   ↓
+Hilos, Runnable,
+ExecutorService y concurrencia
+
+   ↓
+
+Semana 5
+   ↓
+Sincronización, recursos compartidos
+y procesamiento concurrente seguro
+
+   ↓
+
+Semana 6
+   ↓
+Java Swing, GUI, login,
+roles y gestión visual
+
+   ↓
+
+Semana 7
+   ↓
+MySQL, JDBC, DAO,
+persistencia de datos
+
+   ↓
+
+Semana 8
+   ↓
+CRUD completo, validaciones,
+gestión de usuarios,
+pedidos, repartidores y entregas,
+refactorización y documentación
+```
+
+---
+
+# Resultado de la Semana 8
+
+Al finalizar la Semana 8, **SpeedFast** cuenta con un ciclo funcional integrado que permite gestionar información mediante una interfaz gráfica conectada a una base de datos MySQL.
+
+La aplicación permite:
+
+* Iniciar sesión con usuarios registrados.
+* Controlar funcionalidades mediante roles.
+* Registrar usuarios.
+* Listar usuarios.
+* Editar usuarios.
+* Eliminar usuarios.
+* Registrar pedidos.
+* Listar pedidos.
+* Editar pedidos.
+* Cancelar pedidos.
+* Eliminar pedidos.
+* Consultar repartidores.
+* Registrar repartidores.
+* Editar repartidores.
+* Eliminar repartidores.
+* Iniciar entregas.
+* Asociar pedidos con repartidores.
+* Registrar entregas.
+* Listar entregas.
+* Editar entregas.
+* Eliminar entregas.
+* Actualizar estados de pedidos.
+* Mantener información persistente en MySQL.
+* Manejar errores mediante excepciones.
+* Validar datos ingresados por el usuario.
+* Utilizar DAO para separar el acceso a datos.
+* Documentar las principales clases mediante JavaDoc.
+
+El proyecto integra los conocimientos desarrollados durante las ocho semanas:
+
+```text
+POO
+ ↓
+Herencia
+ ↓
+Polimorfismo
+ ↓
+Abstracción
+ ↓
+Interfaces
+ ↓
+Colecciones
+ ↓
+Concurrencia
+ ↓
+Sincronización
+ ↓
+Java Swing
+ ↓
+MVC
+ ↓
+JDBC
+ ↓
+MySQL
+ ↓
+DAO
+ ↓
+CRUD
+ ↓
+Validaciones
+ ↓
+Refactorización
+ ↓
+Documentación JavaDoc
+```
+
+De esta manera, **SpeedFast** evoluciona desde una aplicación inicial basada en conceptos de Programación Orientada a Objetos hacia una aplicación Java de escritorio con interfaz gráfica, persistencia de datos, operaciones CRUD, gestión de usuarios, pedidos, repartidores y entregas, utilizando una arquitectura separada por capas.
+
+---
+
+## Tecnologías
+
+* Java
+* Maven
+* IntelliJ IDEA
+* MySQL
+* MySQL Connector/J
+* JDBC
+* Java Swing
+* Programación Orientada a Objetos
+* Patrón DAO
+* CRUD
+* Persistencia de datos
+* Concurrencia
+* Sincronización
+* JavaDoc
+
+---
+
 ## Autor
 
 **Cristian Contreras**
 
 Duoc UC — 2026
+
+```
+
+**Esta sería la versión que yo dejaría como Semana 8**, porque no solo habla de la eliminación de `ControladorUsuarios`, sino que reúne todo lo que efectivamente trabajaste en esta etapa: **CRUD completo + usuarios + pedidos + repartidores + entregas + validaciones + DAO + JDBC + refactorización + JavaDoc**.
+```

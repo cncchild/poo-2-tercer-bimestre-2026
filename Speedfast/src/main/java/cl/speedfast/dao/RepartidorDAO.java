@@ -91,4 +91,61 @@ public class RepartidorDAO {
             stmt.executeUpdate();
         }
     }
+    /**
+     * Actualiza el nombre de un repartidor existente.
+     *
+     * @param repartidor repartidor que se desea actualizar
+     * @throws SQLException si ocurre un error con la base de datos
+     */
+    public void actualizar(Repartidor repartidor)
+            throws SQLException {
+
+        String sql = """
+                UPDATE repartidor
+                SET nombre = ?
+                WHERE id = ?
+                """;
+
+        try (Connection conn =
+                     ConexionBD.obtenerConexion();
+             PreparedStatement stmt =
+                     conn.prepareStatement(sql)) {
+
+            stmt.setString(
+                    1,
+                    repartidor.getNombre()
+            );
+
+            stmt.setInt(
+                    2,
+                    repartidor.getId()
+            );
+
+            stmt.executeUpdate();
+        }
+    }
+    /**
+     * Elimina un repartidor de la base de datos.
+     *
+     * @param id identificador del repartidor
+     * @throws SQLException si ocurre un error con la base de datos
+     */
+    public void eliminar(int id)
+            throws SQLException {
+
+        String sql = """
+                DELETE FROM repartidor
+                WHERE id = ?
+                """;
+
+        try (Connection conn =
+                     ConexionBD.obtenerConexion();
+             PreparedStatement stmt =
+                     conn.prepareStatement(sql)) {
+
+            stmt.setInt(1, id);
+
+            stmt.executeUpdate();
+        }
+    }
 }

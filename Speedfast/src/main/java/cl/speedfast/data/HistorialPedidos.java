@@ -9,7 +9,7 @@ import cl.speedfast.model.Pedido;
  * Gestiona el historial de pedidos registrados en SpeedFast.
  *
  * Permite agregar pedidos, buscar un pedido por su identificador
- * y mostrar el historial de entregas realizadas.
+ * y consultar el historial de pedidos registrados.
  *
  * @author Cristian Contreras
  * @version 1.0
@@ -53,42 +53,24 @@ public class HistorialPedidos {
 
         return null;
     }
+
+    /**
+     * Obtiene la lista de pedidos registrados en el historial.
+     *
+     * @return lista que contiene los pedidos registrados
+     */
     public List<Pedido> getHistorial() {
         return historial;
     }
+
     /**
-     * Muestra en consola el historial de pedidos registrados,
-     * indicando el tipo de pedido, su identificador y el repartidor asignado.
+     * Mantiene el método de consulta del historial para compatibilidad
+     * con las funcionalidades desarrolladas en semanas anteriores.
+     *
+     * La visualización actual de los pedidos se realiza mediante
+     * la interfaz gráfica de Swing.
      */
     public void mostrarHistorial() {
-
-        System.out.println("\n==============================");
-        System.out.println("     HISTORIAL DE PEDIDOS");
-        System.out.println("==============================");
-
-        if (historial.isEmpty()) {
-
-            System.out.println(
-                    "No existen pedidos registrados."
-            );
-
-            return;
-        }
-
-        for (Pedido pedido : historial) {
-
-            System.out.println(
-                    pedido.obtenerTipoPedido()
-                            + " #"
-                            + pedido.getIdPedido()
-                            + " - "
-                            + pedido.getEstado()
-                            + " - por "
-                            + pedido.getRepartidor()
-            );
-        }
-
-        System.out.println("==============================");
+        // La visualización se realiza actualmente mediante Swing.
     }
-
 }

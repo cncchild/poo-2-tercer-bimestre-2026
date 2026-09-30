@@ -1,6 +1,5 @@
 package cl.speedfast.vista;
 
-import cl.speedfast.controlador.ControladorUsuarios;
 import cl.speedfast.dao.UsuarioDAO;
 import cl.speedfast.model.Usuario;
 
@@ -8,6 +7,20 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.util.List;
 
+/**
+ * Ventana utilizada para administrar los usuarios
+ * registrados en el sistema SpeedFast.
+ *
+ * Permite listar, agregar, editar y eliminar usuarios.
+ * Las operaciones de persistencia se realizan directamente
+ * mediante UsuarioDAO.
+ *
+ * Los botones de administración se habilitan únicamente
+ * para usuarios con rol administrador.
+ *
+ * @author Cristian Contreras
+ * @version 1.0
+ */
 public class ListaUsuarios extends JFrame {
 
     private JPanel formListaUsuarios;
@@ -16,30 +29,35 @@ public class ListaUsuarios extends JFrame {
     private JButton btnAgregarUsuario;
     private JButton btnEditarUsuario;
     private JButton btnEliminarUsuario;
-    private JPanel jpTable;
     private JTable jtableUsuarios;
     private JLabel txtTituloUsuarios;
     private JButton btnRecargarUsuario;
+    private JScrollPane jpTable;
     private JComboBox<String> jcbEditorRol;
 
     private DefaultTableModel model;
 
     private final String rol;
-    private final ControladorUsuarios controladorUsuarios;
     private final UsuarioDAO usuarioDAO;
     private final Home home;
 
     private int usuarioSeleccionado = -1;
 
+    /**
+     * Constructor de la ventana de administración de usuarios.
+     *
+     * @param home ventana principal del sistema
+     * @param rol rol del usuario que inició sesión
+     * @param usuarioDAO DAO encargado de gestionar los usuarios
+     */
     public ListaUsuarios(
             Home home,
             String rol,
-            ControladorUsuarios controladorUsuarios) {
+            UsuarioDAO usuarioDAO) {
 
         this.home = home;
         this.rol = rol;
-        this.controladorUsuarios = controladorUsuarios;
-        this.usuarioDAO = new UsuarioDAO();
+        this.usuarioDAO = usuarioDAO;
 
         setTitle("SpeedFast - Usuarios");
         setContentPane(formListaUsuarios);
@@ -53,6 +71,12 @@ public class ListaUsuarios extends JFrame {
         cargarUsuarios();
     }
 
+    /**
+     * Configura la tabla donde se muestran los usuarios.
+     *
+     * Define las columnas, impide la edición directa de las celdas
+     * y permite seleccionar un único usuario.
+     */
     private void inicializarTabla() {
 
         String[] columnas = {
@@ -88,6 +112,12 @@ public class ListaUsuarios extends JFrame {
                 });
     }
 
+    /**
+     * Carga los usuarios registrados en la tabla.
+     *
+     * Obtiene los datos desde UsuarioDAO y actualiza
+     * el contenido de la tabla.
+     */
     public void cargarUsuarios() {
 
         model.setRowCount(0);
@@ -108,6 +138,9 @@ public class ListaUsuarios extends JFrame {
         usuarioSeleccionado = -1;
     }
 
+    /**
+     * Configura los eventos de los botones de la ventana.
+     */
     private void inicializarBotones() {
 
         btnAgregarUsuario.addActionListener(
@@ -121,6 +154,7 @@ public class ListaUsuarios extends JFrame {
         btnEliminarUsuario.addActionListener(
                 e -> eliminarUsuario()
         );
+
         btnRecargarUsuario.addActionListener(
                 e -> cargarUsuarios()
         );
@@ -132,6 +166,13 @@ public class ListaUsuarios extends JFrame {
         configurarPermisos();
     }
 
+    /**
+     * Configura los permisos de los botones según el rol
+     * del usuario que inició sesión.
+     *
+     * Los usuarios con rol administrador pueden agregar,
+     * editar y eliminar usuarios.
+     */
     private void configurarPermisos() {
 
         boolean esAdministrador =
@@ -142,17 +183,29 @@ public class ListaUsuarios extends JFrame {
         btnEliminarUsuario.setEnabled(esAdministrador);
     }
 
+    /**
+     * Abre la ventana para registrar un nuevo usuario.
+     *
+     * Envía UsuarioDAO para que el registro pueda realizar
+     * la operación directamente sobre la base de datos.
+     */
     private void agregarUsuario() {
 
         RegistroUsuarios registro =
                 new RegistroUsuarios(
                         this,
-                        controladorUsuarios
+                        usuarioDAO
                 );
 
         registro.setVisible(true);
     }
 
+    /**
+     * Abre la ventana para editar el usuario seleccionado.
+     *
+     * Busca el usuario seleccionado en la base de datos
+     * y envía sus datos a la ventana de edición.
+     */
     private void editarUsuario() {
 
         if (usuarioSeleccionado == -1) {
@@ -209,6 +262,11 @@ public class ListaUsuarios extends JFrame {
 
         editarUsuarios.setVisible(true);
     }
+
+    /**
+     * Elimina el usuario seleccionado después de solicitar
+     * confirmación al usuario.
+     */
     private void eliminarUsuario() {
 
         if (usuarioSeleccionado == -1) {
@@ -268,6 +326,10 @@ public class ListaUsuarios extends JFrame {
             );
         }
     }
+
+    /**
+     * Solicita confirmación y vuelve a la ventana Home.
+     */
     private void volverAlHome() {
 
         int respuesta =
@@ -281,13 +343,9 @@ public class ListaUsuarios extends JFrame {
 
         if (respuesta == JOptionPane.YES_OPTION) {
 
-
-
-
             home.setVisible(true);
 
             this.dispose();
         }
     }
-
 }

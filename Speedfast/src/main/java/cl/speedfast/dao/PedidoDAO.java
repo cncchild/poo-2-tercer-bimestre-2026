@@ -199,6 +199,28 @@ public class PedidoDAO {
     }
 
     /**
+     * Elimina un pedido de la base de datos.
+     *
+     * @param id identificador del pedido
+     * @throws SQLException si ocurre un error con la base de datos
+     */
+    public void eliminar(int id) throws SQLException {
+
+        String sql = """
+            DELETE FROM pedido
+            WHERE id = ?
+            """;
+
+        try (Connection conn = ConexionBD.obtenerConexion();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setInt(1, id);
+
+            stmt.executeUpdate();
+        }
+    }
+    
+    /**
      * Actualiza el estado de un pedido.
      *
      * @param id identificador del pedido
@@ -284,6 +306,12 @@ public class PedidoDAO {
                 return null;
         }
     }
+    /**
+     * Obtiene el siguiente identificador disponible para un pedido.
+     *
+     * @return siguiente identificador disponible
+     * @throws SQLException si ocurre un error con la base de datos
+     */
     public int obtenerSiguienteId() throws SQLException {
 
         String sql = """

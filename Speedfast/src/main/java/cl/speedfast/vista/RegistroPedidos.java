@@ -10,6 +10,17 @@ import cl.speedfast.model.PedidoExpress;
 
 import javax.swing.*;
 
+/**
+ * Ventana utilizada para registrar nuevos pedidos
+ * en el sistema SpeedFast.
+ *
+ * Permite ingresar la dirección, distancia y tipo de pedido.
+ * El pedido creado es almacenado en la base de datos mediante
+ * PedidoDAO.
+ *
+ * @author Cristian Contreras
+ * @version 1.0
+ */
 public class RegistroPedidos extends JFrame {
 
     private JPanel formRegistroPedidos;
@@ -29,6 +40,18 @@ public class RegistroPedidos extends JFrame {
 
     private final ListaPedidos listaPedidos;
 
+    /**
+     * Constructor de la ventana de registro de pedidos.
+     *
+     * Configura la ventana, carga los tipos de pedido disponibles
+     * y establece los eventos de los botones guardar y cancelar.
+     *
+     * @param listaPedidos ventana que contiene la lista de pedidos
+     * @param pedidoDAO objeto encargado de gestionar los pedidos
+     *                  en la base de datos
+     * @param repartidorDAO objeto encargado de gestionar los repartidores
+     * @param entregaDAO objeto encargado de gestionar las entregas
+     */
     public RegistroPedidos(
             ListaPedidos listaPedidos,
             PedidoDAO pedidoDAO,
@@ -76,10 +99,13 @@ public class RegistroPedidos extends JFrame {
         });
     }
 
-    // =========================================================
-    // GUARDAR PEDIDO
-    // =========================================================
-
+    /**
+     * Valida los datos ingresados, crea el tipo de pedido
+     * seleccionado y lo guarda en la base de datos.
+     *
+     * Verifica la dirección, la distancia y el tipo de pedido
+     * antes de realizar el registro.
+     */
     private void guardarPedido() {
 
         String direccion =

@@ -1,7 +1,7 @@
 package cl.speedfast.model;
 
-import cl.speedfast.interfaces.Despachable;
 import cl.speedfast.interfaces.Cancelable;
+import cl.speedfast.interfaces.Despachable;
 import cl.speedfast.interfaces.Rastreable;
 
 /**
@@ -28,6 +28,9 @@ public abstract class Pedido
 
     /**
      * Constructor de la clase Pedido.
+     *
+     * Inicializa el pedido con estado PENDIENTE y sin
+     * un repartidor asignado.
      *
      * @param idPedido identificador del pedido
      * @param direccionEntrega dirección donde se realizará la entrega
@@ -71,6 +74,7 @@ public abstract class Pedido
     public double getDistanciaKm() {
         return distanciaKm;
     }
+
     /**
      * Modifica la dirección de entrega del pedido.
      *
@@ -88,10 +92,11 @@ public abstract class Pedido
     public void setDistanciaKm(double distanciaKm) {
         this.distanciaKm = distanciaKm;
     }
+
     /**
      * Obtiene el nombre del repartidor asignado.
      *
-     * @return nombre del repartidor
+     * @return nombre del repartidor o null si no existe asignación
      */
     public String getRepartidor() {
         return repartidor;
@@ -115,16 +120,22 @@ public abstract class Pedido
         return estado;
     }
 
+    /**
+     * Modifica el estado del pedido.
+     *
+     * @param nuevoEstado nuevo estado del pedido
+     */
     public void setEstado(EstadoPedido nuevoEstado) {
         this.estado = nuevoEstado;
     }
+
     /**
      * Template Method que define el flujo general
      * para procesar un pedido.
      *
-     * El proceso muestra el resumen, calcula el tiempo
-     * de entrega, asigna un repartidor, muestra el tiempo,
-     * despacha el pedido y finaliza el proceso.
+     * El proceso obtiene el resumen, calcula el tiempo
+     * de entrega, asigna un repartidor y finaliza
+     * el procesamiento.
      */
     public final void procesarPedido() {
 
@@ -154,108 +165,71 @@ public abstract class Pedido
      * @param nombre nombre del repartidor
      */
     public void asignarRepartidor(String nombre) {
-
         setRepartidor(nombre);
     }
 
     /**
      * Implementación de la interfaz Despachable.
      *
-     * Indica que el pedido fue despachado correctamente.
+     * Cambia el estado del pedido a ENTREGADO.
      */
     @Override
     public void despachar() {
-
         estado = EstadoPedido.ENTREGADO;
-
-        System.out.println(
-                "Pedido despachado correctamente."
-        );
     }
 
     /**
      * Implementación de la interfaz Cancelable.
      *
-     * Cancela el pedido y muestra un mensaje indicando
-     * el tipo de pedido cancelado.
+     * Cancela el pedido cuando su estado permite realizar
+     * dicha operación.
+     *
+     * Los pedidos en reparto, entregados o ya cancelados
+     * no pueden volver a cancelarse.
      */
     @Override
     public void cancelar() {
 
         if (estado == EstadoPedido.EN_REPARTO) {
-
-            System.out.println(
-                    "[ERROR] El pedido ya está en reparto y no puede cancelarse."
-            );
-
             return;
         }
 
         if (estado == EstadoPedido.ENTREGADO) {
-
-            System.out.println(
-                    "[ERROR] El pedido ya fue entregado y no puede cancelarse."
-            );
-
             return;
         }
 
         if (estado == EstadoPedido.CANCELADO) {
-            System.out.println(
-                    "[ERROR] El pedido ya está cancelado."
-            );
             return;
         }
 
         estado = EstadoPedido.CANCELADO;
-
-        System.out.println(
-                "Pedido #" + idPedido + " cancelado correctamente."
-        );
     }
 
     /**
      * Implementación de la interfaz Rastreable.
      *
-     * El historial es administrado por la clase HistorialPedidos.
+     * El historial de pedidos es administrado por
+     * la clase HistorialPedidos.
      */
     @Override
     public void verHistorial() {
-
-        System.out.println(
-                "El historial será gestionado por HistorialPedidos."
-        );
+        // El historial se administra mediante HistorialPedidos.
     }
 
     /**
      * Muestra la información básica del pedido.
+     *
+     * La información del pedido se encuentra disponible
+     * mediante sus métodos getter y mediante la interfaz Swing.
      */
     public void mostrarResumen() {
-
-        System.out.println("\n==============================");
-
-        System.out.println(
-                "[" + obtenerTipoPedido() + "]"
-        );
-
-        System.out.println(
-                "\nPedido #" + idPedido
-        );
-
-        System.out.println(
-                "Dirección: " + direccionEntrega
-        );
-
-        System.out.println(
-                "Distancia: " + distanciaKm + " km"
-        );
-        System.out.println(
-                "Estado: " + estado
-        );
+        // La visualización actual se realiza mediante Swing.
     }
 
     /**
      * Obtiene el tipo específico de pedido.
+     *
+     * Cada subclase debe implementar este método.
      *
      * @return nombre del tipo de pedido
      */
@@ -271,35 +245,44 @@ public abstract class Pedido
     public abstract int calcularTiempoEntrega();
 
     /**
-     * Muestra el tiempo estimado de entrega.
+     * Mantiene el cálculo del tiempo dentro del flujo
+     * definido por el Template Method.
      *
      * @param tiempo tiempo estimado en minutos
      */
     private void mostrarTiempo(int tiempo) {
-
-        System.out.println(
-                "Tiempo estimado: "
-                        + tiempo
-                        + " minutos"
-        );
+        // La información actualmente se gestiona mediante Swing.
     }
+
+    /**
+     * Cambia el estado del pedido a EN_REPARTO.
+     */
     public void marcarEnReparto() {
-
         estado = EstadoPedido.EN_REPARTO;
-        }
+    }
 
+    /**
+     * Cambia el estado del pedido a ENTREGADO.
+     */
     public void marcarEntregado() {
-
         estado = EstadoPedido.ENTREGADO;
     }
+
     /**
      * Finaliza el procesamiento del pedido.
+     *
+     * Este método forma parte del flujo definido por
+     * el Template Method.
      */
     private void finalizarPedido() {
-         System.out.println(
-                "Gracias por su preferencia."
-        );
+        // El mensaje de finalización ya no se muestra por consola.
     }
+
+    /**
+     * Obtiene una representación textual del pedido.
+     *
+     * @return información del pedido en formato de texto
+     */
     @Override
     public String toString() {
         return "Pedido{" +

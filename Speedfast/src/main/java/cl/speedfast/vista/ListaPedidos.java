@@ -6,6 +6,7 @@ import cl.speedfast.dao.RepartidorDAO;
 import cl.speedfast.model.Entrega;
 import cl.speedfast.model.EstadoPedido;
 import cl.speedfast.model.Pedido;
+import cl.speedfast.model.Repartidor;
 import javax.swing.table.JTableHeader;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -19,7 +20,6 @@ public class ListaPedidos extends JFrame {
     private JPanel formListaProductos;
     private JLabel lblTitulo;
     private JLabel lblListarPedidos;
-    private JPanel jpListaPedidos;
     private JTable jtListarPedido;
     private JButton btnAgregar;
     private JButton btnEditar;
@@ -29,6 +29,8 @@ public class ListaPedidos extends JFrame {
     private JPanel jpLogout;
     private JButton btnIniciarEntrega;
     private JPanel jpEntrega;
+    private JButton btnEliminarPedidoBD;
+    private JScrollPane jpListaPedidos;
 
     private DefaultTableModel model;
 
@@ -188,6 +190,9 @@ public class ListaPedidos extends JFrame {
                 e -> eliminarPedido()
         );
 
+        btnEliminarPedidoBD.addActionListener(
+                e -> btnEliminarPedidoBD()
+        );
         // Cerrar sesión
         btnLogOut.addActionListener(
                 e -> cerrarSesion()
@@ -346,7 +351,81 @@ public class ListaPedidos extends JFrame {
         }
     }
 
+    private void btnEliminarPedidoBD() {
 
+        if (pedidoSeleccionado == -1) {
+
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Debes seleccionar un pedido de la tabla",
+                    "Pedido no seleccionado",
+                    JOptionPane.WARNING_MESSAGE
+            );
+
+            return;
+        }
+
+        try {
+
+            List<Pedido> pedidos =
+                    pedidoDAO.listarTodos();
+
+            if (pedidoSeleccionado >= pedidos.size()) {
+
+                JOptionPane.showMessageDialog(
+                        this,
+                        "No se pudo encontrar el pedido seleccionado.",
+                        "Error",
+                        JOptionPane.ERROR_MESSAGE
+                );
+
+                return;
+            }
+
+            Pedido pedido =
+                    pedidos.get(pedidoSeleccionado);
+
+            int respuesta =
+                    JOptionPane.showConfirmDialog(
+                            this,
+                            "¿Deseas eliminar definitivamente el pedido #"
+                                    + pedido.getIdPedido()
+                                    + "?",
+                            "Confirmar eliminación",
+                            JOptionPane.YES_NO_OPTION,
+                            JOptionPane.WARNING_MESSAGE
+                    );
+
+            if (respuesta != JOptionPane.YES_OPTION) {
+                return;
+            }
+
+            pedidoDAO.eliminar(
+                    pedido.getIdPedido()
+            );
+
+            cargarPedidos();
+
+            pedidoSeleccionado = -1;
+
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Pedido eliminado correctamente.",
+                    "Eliminación",
+                    JOptionPane.INFORMATION_MESSAGE
+            );
+
+        } catch (SQLException ex) {
+
+            JOptionPane.showMessageDialog(
+                    this,
+                    "No se pudo eliminar el pedido:\n"
+                            + ex.getMessage(),
+                    "Error de base de datos",
+                    JOptionPane.ERROR_MESSAGE
+            );
+        }
+    }
     // =========================================================
     // INICIAR ENTREGA
     // =========================================================
@@ -431,53 +510,39 @@ public class ListaPedidos extends JFrame {
             }
 
 
-            // Crear opciones
+               // Seleccionar repartidor mediante JComboBox
 
-            String[] opciones =
-                    new String[repartidores.size()];
+            JComboBox<cl.speedfast.model.Repartidor> comboRepartidores =
+                    new JComboBox<>();
 
-            for (int i = 0; i < repartidores.size(); i++) {
+            for (cl.speedfast.model.Repartidor repartidor : repartidores) {
 
-                opciones[i] =
-                        repartidores.get(i).getNombre();
+                comboRepartidores.addItem(repartidor);
             }
 
-
-            // Seleccionar repartidor
-
-            String repartidorSeleccionado =
-                    (String) JOptionPane.showInputDialog(
+            int respuesta =
+                    JOptionPane.showConfirmDialog(
                             this,
+                            comboRepartidores,
                             "Selecciona el repartidor:",
-                            "Iniciar entrega",
-                            JOptionPane.QUESTION_MESSAGE,
-                            null,
-                            opciones,
-                            opciones[0]
+                            JOptionPane.OK_CANCEL_OPTION,
+                            JOptionPane.QUESTION_MESSAGE
                     );
 
-            if (repartidorSeleccionado == null) {
+            if (respuesta != JOptionPane.OK_OPTION) {
                 return;
             }
 
-
-            // Buscar repartidor
-
-            cl.speedfast.model.Repartidor repartidor = null;
-
-            for (cl.speedfast.model.Repartidor r : repartidores) {
-
-                if (r.getNombre().equals(
-                        repartidorSeleccionado)) {
-
-                    repartidor = r;
-                    break;
-                }
-            }
+            Repartidor repartidor =
+                    (Repartidor)
+                            comboRepartidores.getSelectedItem();
 
             if (repartidor == null) {
                 return;
             }
+
+
+
 
 
             // Asignar repartidor
