@@ -1853,7 +1853,7 @@ La aplicación permite:
 * Separar el acceso a datos mediante clases DAO.
 
 De esta forma, SpeedFast evoluciona desde una aplicación orientada a objetos con concurrencia e interfaz gráfica hacia una aplicación con **persistencia real de datos mediante MySQL y JDBC**.
-
+```
              SPEEDFAST
                  │
                  ▼
@@ -1880,7 +1880,7 @@ De esta forma, SpeedFast evoluciona desde una aplicación orientada a objetos co
         ┌────────┼────────┐
         ▼        ▼        ▼
      pedido  repartidor  entrega
-
+```
      
 ## Tecnologías
 
