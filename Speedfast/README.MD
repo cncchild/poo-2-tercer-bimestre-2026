@@ -1,4 +1,4 @@
-# Semana 1 a 7 – Programación Orientada a Objetos II
+# Semana 1 a 9 – Programación Orientada a Objetos II
 
 ## Descripción
 
@@ -2722,7 +2722,8 @@ src/
 
             └── speedfast/
 
-                ├── Main.java
+                ├── app
+                     ---Main.java
                 │
                 ├── conexion/
                 │   └── ConexionBD.java
