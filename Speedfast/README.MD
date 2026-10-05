@@ -3049,7 +3049,3 @@ De esta manera, **SpeedFast** evoluciona desde una aplicación inicial basada en
 
 Duoc UC — 2026
 
-```
-
-**Esta sería la versión que yo dejaría como Semana 8**, porque no solo habla de la eliminación de `ControladorUsuarios`, sino que reúne todo lo que efectivamente trabajaste en esta etapa: **CRUD completo + usuarios + pedidos + repartidores + entregas + validaciones + DAO + JDBC + refactorización + JavaDoc**.
-```
