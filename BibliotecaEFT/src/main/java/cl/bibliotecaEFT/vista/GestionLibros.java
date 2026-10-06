@@ -14,7 +14,7 @@ import java.util.List;
  * Ventana para gestionar los libros registrados
  * en el sistema de biblioteca.
  *
- * @author Cristian Contreras
+ * @author Cristian Contreras Child
  * @version 1.0
  */
 public class GestionLibros extends JFrame {
@@ -26,6 +26,8 @@ public class GestionLibros extends JFrame {
 
     /**
      * Constructor de la ventana de gestión de libros.
+     * Inicializa el controlador, la ventana, sus componentes
+     * y carga los libros registrados.
      */
     public GestionLibros() {
 
@@ -43,7 +45,8 @@ public class GestionLibros extends JFrame {
     }
 
     /**
-     * Configura la ventana.
+     * Configura las propiedades principales de la ventana,
+     * incluyendo título, tamaño, cierre y posición.
      */
     private void inicializarVentana() {
 
@@ -54,7 +57,8 @@ public class GestionLibros extends JFrame {
     }
 
     /**
-     * Crea los componentes gráficos.
+     * Inicializa y organiza los componentes gráficos
+     * utilizados para gestionar los libros.
      */
     private void inicializarComponentes() {
 
@@ -131,7 +135,8 @@ public class GestionLibros extends JFrame {
     }
 
     /**
-     * Carga los libros desde la base de datos.
+     * Consulta los libros registrados mediante el controlador
+     * y actualiza la información mostrada en la tabla.
      */
     private void cargarLibros() {
 
@@ -170,7 +175,8 @@ public class GestionLibros extends JFrame {
     }
 
     /**
-     * Abre la ventana para registrar un nuevo libro.
+     * Abre la ventana para registrar un nuevo libro
+     * y actualiza la tabla después de cerrar el formulario.
      */
     private void abrirAgregarLibro() {
 
@@ -183,7 +189,9 @@ public class GestionLibros extends JFrame {
     }
 
     /**
-     * Abre la ventana de edición del libro seleccionado.
+     * Obtiene el libro seleccionado en la tabla, abre la ventana
+     * de edición y actualiza la información después de cerrar
+     * el formulario.
      */
     private void editarLibroSeleccionado() {
 
@@ -248,7 +256,8 @@ public class GestionLibros extends JFrame {
     }
 
     /**
-     * Elimina el libro seleccionado de la base de datos.
+     * Obtiene el libro seleccionado, solicita confirmación
+     * y elimina el registro mediante el controlador.
      */
     private void eliminarLibroSeleccionado() {
 
@@ -321,7 +330,8 @@ public class GestionLibros extends JFrame {
     }
 
     /**
-     * Solicita confirmación antes de volver al menú principal.
+     * Solicita confirmación al usuario antes de cerrar
+     * la ventana y volver al menú principal.
      */
     private void volverAlHome() {
 

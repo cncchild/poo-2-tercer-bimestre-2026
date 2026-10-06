@@ -12,7 +12,7 @@ import java.awt.*;
 /**
  * Ventana para registrar un nuevo libro.
  *
- * @author Cristian Contreras
+ * @author Cristian Contreras Child
  * @version 1.0
  */
 public class AgregarLibro extends JDialog {
@@ -48,9 +48,10 @@ public class AgregarLibro extends JDialog {
     }
 
     /**
-     * Configura las propiedades de la ventana.
+     * Configura las propiedades principales de la ventana.
      *
-     * @param ventana ventana principal
+     * @param ventana ventana principal utilizada para posicionar
+     *                el diálogo.
      */
     private void inicializarVentana(JFrame ventana) {
 
@@ -62,7 +63,8 @@ public class AgregarLibro extends JDialog {
     }
 
     /**
-     * Crea y organiza los componentes.
+     * Crea y organiza los componentes gráficos de la ventana,
+     * incluyendo campos de texto, categoría y botones.
      */
     private void inicializarComponentes() {
 
@@ -127,7 +129,8 @@ public class AgregarLibro extends JDialog {
     }
 
     /**
-     * Carga las categorías disponibles desde la base de datos.
+     * Carga las categorías disponibles desde la base de datos
+     * y las incorpora al selector de categorías.
      */
     private void cargarCategorias() {
 
@@ -154,7 +157,8 @@ public class AgregarLibro extends JDialog {
     }
 
     /**
-     * Valida los datos y registra el libro.
+     * Valida los datos ingresados y registra un nuevo libro
+     * mediante el controlador correspondiente.
      */
     private void guardarLibro() {
 
@@ -242,7 +246,10 @@ public class AgregarLibro extends JDialog {
         }
     }
 
-
+    /**
+     * Solicita confirmación al usuario antes de cancelar
+     * el registro y cerrar la ventana.
+     */
     private void cancelar() {
 
         int respuesta =
@@ -261,5 +268,4 @@ public class AgregarLibro extends JDialog {
 
         dispose();
     }
-
 }

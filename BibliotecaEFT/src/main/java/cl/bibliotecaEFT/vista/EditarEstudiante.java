@@ -8,9 +8,10 @@ import javax.swing.*;
 import java.awt.*;
 
 /**
- * Ventana para editar un estudiante registrado.
+ * Ventana modal que permite editar los datos de un estudiante
+ * previamente registrado en el sistema.
  *
- * @author Cristian Contreras
+ * @author Cristian Contreras Child
  * @version 1.0
  */
 public class EditarEstudiante extends JDialog {
@@ -24,6 +25,12 @@ public class EditarEstudiante extends JDialog {
 
     private final EstudianteController estudianteController;
 
+    /**
+     * Constructor de la ventana para editar un estudiante.
+     *
+     * @param ventana ventana principal desde donde se abre el diálogo.
+     * @param estudiante estudiante cuyos datos serán modificados.
+     */
     public EditarEstudiante(
             JFrame ventana,
             Estudiante estudiante) {
@@ -43,6 +50,12 @@ public class EditarEstudiante extends JDialog {
         cargarDatos();
     }
 
+    /**
+     * Configura las propiedades principales de la ventana,
+     * incluyendo título, tamaño, posición, modalidad y redimensionamiento.
+     *
+     * @param ventana ventana principal utilizada para posicionar el diálogo.
+     */
     private void inicializarVentana(JFrame ventana) {
 
         setTitle(
@@ -55,6 +68,10 @@ public class EditarEstudiante extends JDialog {
         setResizable(false);
     }
 
+    /**
+     * Inicializa y organiza los componentes gráficos de la ventana,
+     * incluyendo los campos de edición y los botones de acción.
+     */
     private void inicializarComponentes() {
 
         JPanel panel = new JPanel(
@@ -123,6 +140,10 @@ public class EditarEstudiante extends JDialog {
         add(panel);
     }
 
+    /**
+     * Carga en los campos del formulario los datos actuales
+     * del estudiante seleccionado para su edición.
+     */
     private void cargarDatos() {
 
         txtNombre.setText(
@@ -142,6 +163,10 @@ public class EditarEstudiante extends JDialog {
         );
     }
 
+    /**
+     * Valida los datos ingresados y actualiza la información
+     * del estudiante mediante el controlador correspondiente.
+     */
     private void actualizarEstudiante() {
 
         String nombre =
@@ -202,6 +227,11 @@ public class EditarEstudiante extends JDialog {
             );
         }
     }
+
+    /**
+     * Solicita confirmación al usuario antes de cancelar
+     * la edición y cerrar la ventana sin guardar los cambios.
+     */
     private void cancelar() {
 
         int respuesta =

@@ -13,11 +13,18 @@ import java.util.List;
 /**
  * DAO encargado de gestionar las operaciones de la tabla libros.
  *
- * @author Cristian Contreras
+ * @author Cristian Contreras Child
  * @version 1.0
  */
 public class LibroDAO {
 
+    /**
+     * Guarda un nuevo libro en la base de datos.
+     *
+     * @param libro libro que se desea guardar.
+     * @throws SQLException si ocurre un error al ejecutar la operación
+     *                      en la base de datos.
+     */
     public void guardar(Libro libro) throws SQLException {
 
         String sql = """
@@ -40,6 +47,12 @@ public class LibroDAO {
         }
     }
 
+    /**
+     * Obtiene todos los libros registrados en la base de datos.
+     *
+     * @return lista con todos los libros registrados.
+     * @throws SQLException si ocurre un error al consultar la base de datos.
+     */
     public List<Libro> listarTodos() throws SQLException {
 
         List<Libro> libros = new ArrayList<>();
@@ -72,7 +85,14 @@ public class LibroDAO {
         return libros;
     }
 
-     public Libro buscarPorId(int id) throws SQLException {
+    /**
+     * Busca un libro utilizando su identificador.
+     *
+     * @param id identificador del libro.
+     * @return libro encontrado o null si no existe.
+     * @throws SQLException si ocurre un error al consultar la base de datos.
+     */
+    public Libro buscarPorId(int id) throws SQLException {
 
         String sql = """
             SELECT id, titulo, autor, isbn, editorial, stock, id_categoria
@@ -107,6 +127,13 @@ public class LibroDAO {
         return null;
     }
 
+    /**
+     * Actualiza los datos de un libro existente.
+     *
+     * @param libro libro con los datos actualizados.
+     * @throws SQLException si ocurre un error al actualizar
+     *                      la información en la base de datos.
+     */
     public void actualizar(Libro libro) throws SQLException {
 
         String sql = """
@@ -131,6 +158,13 @@ public class LibroDAO {
         }
     }
 
+    /**
+     * Elimina un libro utilizando su identificador.
+     *
+     * @param id identificador del libro que se desea eliminar.
+     * @throws SQLException si ocurre un error al eliminar el libro
+     *                      o si tiene préstamos asociados.
+     */
     public void eliminar(int id) throws SQLException {
 
         String sql = "DELETE FROM libros WHERE id = ?";
@@ -154,6 +188,14 @@ public class LibroDAO {
         }
     }
 
+    /**
+     * Disminuye en una unidad el stock de un libro.
+     *
+     * @param idLibro identificador del libro.
+     * @return true si el stock fue disminuido correctamente,
+     *         false si el libro no existe o no tiene stock disponible.
+     * @throws SQLException si ocurre un error al actualizar la base de datos.
+     */
     public boolean disminuirStock(int idLibro)
             throws SQLException {
 
@@ -178,6 +220,13 @@ public class LibroDAO {
         }
     }
 
+    /**
+     * Aumenta en una unidad el stock de un libro.
+     *
+     * @param idLibro identificador del libro.
+     * @throws SQLException si ocurre un error al actualizar
+     *                      el stock en la base de datos.
+     */
     public void aumentarStock(int idLibro) throws SQLException {
 
         String sql = """
@@ -194,5 +243,4 @@ public class LibroDAO {
             ps.executeUpdate();
         }
     }
-
 }

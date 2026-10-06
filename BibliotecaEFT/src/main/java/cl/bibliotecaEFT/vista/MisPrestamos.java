@@ -22,7 +22,7 @@ import java.util.List;
  * Ventana donde el estudiante puede consultar sus préstamos
  * y registrar la devolución de un libro.
  *
- * @author Cristian Contreras
+ * @author Cristian Contreras Child
  * @version 1.0
  */
 public class MisPrestamos extends JFrame {
@@ -36,6 +36,13 @@ public class MisPrestamos extends JFrame {
     private final EstudianteController estudianteController;
     private final LibroController libroController;
 
+    /**
+     * Constructor de la ventana de préstamos del estudiante.
+     * Inicializa el usuario, los controladores, la ventana,
+     * sus componentes y carga los préstamos correspondientes.
+     *
+     * @param usuario usuario que consulta sus préstamos.
+     */
     public MisPrestamos(Usuario usuario) {
 
         this.usuario = usuario;
@@ -61,6 +68,10 @@ public class MisPrestamos extends JFrame {
         cargarPrestamos();
     }
 
+    /**
+     * Configura las propiedades principales de la ventana,
+     * incluyendo título, tamaño, cierre y posición.
+     */
     private void inicializarVentana() {
 
         setTitle(
@@ -76,6 +87,11 @@ public class MisPrestamos extends JFrame {
         setLocationRelativeTo(null);
     }
 
+    /**
+     * Inicializa y organiza los componentes gráficos
+     * utilizados para consultar y gestionar los préstamos
+     * del estudiante.
+     */
     private void inicializarComponentes() {
 
         modeloTabla =
@@ -135,6 +151,11 @@ public class MisPrestamos extends JFrame {
         );
     }
 
+    /**
+     * Busca el estudiante asociado al usuario actual,
+     * obtiene sus préstamos y actualiza la información
+     * mostrada en la tabla.
+     */
     private void cargarPrestamos() {
 
         try {
@@ -216,6 +237,13 @@ public class MisPrestamos extends JFrame {
         }
     }
 
+    /**
+     * Busca en la base de datos el estudiante cuyo RUT
+     * corresponde al usuario que inició sesión.
+     *
+     * @return estudiante asociado al usuario o null si no existe.
+     * @throws Exception si ocurre un error durante la consulta.
+     */
     private Estudiante buscarEstudiante()
             throws Exception {
 
@@ -236,6 +264,13 @@ public class MisPrestamos extends JFrame {
         return null;
     }
 
+    /**
+     * Busca un libro por su identificador y obtiene su título.
+     *
+     * @param idLibro identificador del libro.
+     * @return título del libro o un mensaje si no existe.
+     * @throws Exception si ocurre un error durante la consulta.
+     */
     private String obtenerTituloLibro(
             int idLibro) throws Exception {
 
@@ -249,6 +284,11 @@ public class MisPrestamos extends JFrame {
         return libro.getTitulo();
     }
 
+    /**
+     * Obtiene el préstamo seleccionado, solicita confirmación
+     * y registra la devolución del libro. También actualiza
+     * el stock correspondiente.
+     */
     private void registrarDevolucion() {
 
         int filaSeleccionada =
@@ -350,6 +390,10 @@ public class MisPrestamos extends JFrame {
         }
     }
 
+    /**
+     * Solicita confirmación al usuario antes de cerrar
+     * la ventana y volver al menú principal.
+     */
     private void volverAlHome() {
 
         int respuesta =

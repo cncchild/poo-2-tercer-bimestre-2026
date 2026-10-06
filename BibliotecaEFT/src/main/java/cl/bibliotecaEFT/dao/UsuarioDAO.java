@@ -1,4 +1,5 @@
 package cl.bibliotecaEFT.dao;
+
 import cl.bibliotecaEFT.conexion.DatabaseConnection;
 import cl.bibliotecaEFT.modelo.Usuario;
 
@@ -12,11 +13,18 @@ import java.util.List;
 /**
  * DAO encargado de gestionar las operaciones de la tabla usuarios.
  *
- * @author Cristian Contreras
+ * @author Cristian Contreras Child
  * @version 1.0
  */
 public class UsuarioDAO {
 
+    /**
+     * Guarda un nuevo usuario en la base de datos.
+     *
+     * @param usuario objeto Usuario que contiene los datos a registrar.
+     * @throws SQLException si ocurre un error durante la operación
+     * de inserción en la base de datos.
+     */
     public void guardar(Usuario usuario) throws SQLException {
 
         String sql = """
@@ -38,6 +46,13 @@ public class UsuarioDAO {
         }
     }
 
+    /**
+     * Obtiene todos los usuarios registrados en la base de datos.
+     *
+     * @return lista con todos los usuarios registrados.
+     * @throws SQLException si ocurre un error durante la consulta
+     * a la base de datos.
+     */
     public List<Usuario> listarTodos() throws SQLException {
 
         List<Usuario> usuarios = new ArrayList<>();
@@ -69,6 +84,14 @@ public class UsuarioDAO {
         return usuarios;
     }
 
+    /**
+     * Busca un usuario utilizando su RUT.
+     *
+     * @param rut RUT del usuario que se desea buscar.
+     * @return el usuario encontrado o {@code null} si no existe.
+     * @throws SQLException si ocurre un error durante la consulta
+     * a la base de datos.
+     */
     public Usuario buscarPorRut(String rut) throws SQLException {
 
         String sql = """

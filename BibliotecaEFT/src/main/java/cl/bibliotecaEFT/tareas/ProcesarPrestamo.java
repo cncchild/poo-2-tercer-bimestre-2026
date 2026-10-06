@@ -13,7 +13,7 @@ import cl.bibliotecaEFT.modelo.Prestamo;
  * sincronización para evitar que dos préstamos modifiquen
  * el stock del mismo libro al mismo tiempo.
  *
- * @author Cristian Contreras
+ * @author Cristian Contreras Child
  * @version 1.0
  */
 public class ProcesarPrestamo implements Runnable {
@@ -31,8 +31,8 @@ public class ProcesarPrestamo implements Runnable {
      * Constructor de la tarea.
      *
      * @param prestamo préstamo que se desea registrar.
-     * @param prestamoDAO DAO encargado de los préstamos.
-     * @param libroDAO DAO encargado de los libros.
+     * @param prestamoDAO DAO encargado de gestionar los préstamos.
+     * @param libroDAO DAO encargado de gestionar los libros.
      */
     public ProcesarPrestamo(
             Prestamo prestamo,
@@ -46,6 +46,12 @@ public class ProcesarPrestamo implements Runnable {
 
     /**
      * Ejecuta el proceso de registro del préstamo.
+     * <p>
+     * Verifica la existencia y disponibilidad del libro,
+     * disminuye su stock y registra el préstamo en la base
+     * de datos. El acceso al proceso se sincroniza mediante
+     * {@code synchronized} para evitar modificaciones
+     * simultáneas del stock.
      */
     @Override
     public void run() {
@@ -86,13 +92,6 @@ public class ProcesarPrestamo implements Runnable {
 
                     return;
                 }
-
-                prestamoDAO.guardar(prestamo);
-
-                System.out.println(
-                        "Préstamo registrado correctamente."
-                );
-
 
                 // Registra el préstamo en la base de datos.
                 prestamoDAO.guardar(prestamo);

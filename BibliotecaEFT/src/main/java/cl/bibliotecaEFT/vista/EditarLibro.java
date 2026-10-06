@@ -10,9 +10,10 @@ import javax.swing.*;
 import java.awt.*;
 
 /**
- * Ventana para editar un libro registrado.
+ * Ventana modal que permite editar los datos de un libro
+ * previamente registrado en el sistema.
  *
- * @author Cristian Contreras
+ * @author Cristian Contreras Child
  * @version 1.0
  */
 public class EditarLibro extends JDialog {
@@ -30,10 +31,10 @@ public class EditarLibro extends JDialog {
     private final LibroController libroController;
 
     /**
-     * Constructor de la ventana de edición.
+     * Constructor de la ventana de edición de libros.
      *
-     * @param ventana ventana principal
-     * @param libro libro seleccionado
+     * @param ventana ventana principal desde donde se abre el diálogo.
+     * @param libro libro seleccionado cuyos datos serán modificados.
      */
     public EditarLibro(JFrame ventana, Libro libro) {
 
@@ -54,9 +55,11 @@ public class EditarLibro extends JDialog {
     }
 
     /**
-     * Configura la ventana.
+     * Configura las propiedades principales de la ventana,
+     * incluyendo título, tamaño, posición, modalidad
+     * y comportamiento de redimensionamiento.
      *
-     * @param ventana ventana principal
+     * @param ventana ventana principal utilizada para posicionar el diálogo.
      */
     private void inicializarVentana(JFrame ventana) {
 
@@ -68,7 +71,9 @@ public class EditarLibro extends JDialog {
     }
 
     /**
-     * Crea los componentes gráficos.
+     * Inicializa y organiza los componentes gráficos de la ventana,
+     * incluyendo los campos de edición, selector de categoría
+     * y botones de acción.
      */
     private void inicializarComponentes() {
 
@@ -133,7 +138,8 @@ public class EditarLibro extends JDialog {
     }
 
     /**
-     * Carga los datos actuales del libro en los campos.
+     * Carga en los campos del formulario los datos actuales
+     * del libro seleccionado para su edición.
      */
     private void cargarDatos() {
 
@@ -147,7 +153,8 @@ public class EditarLibro extends JDialog {
     }
 
     /**
-     * Carga las categorías disponibles.
+     * Obtiene las categorías disponibles desde la base de datos
+     * y selecciona automáticamente la categoría actual del libro.
      */
     private void cargarCategorias() {
 
@@ -182,7 +189,9 @@ public class EditarLibro extends JDialog {
     }
 
     /**
-     * Valida y actualiza el libro.
+     * Valida los datos ingresados, actualiza la información
+     * del libro seleccionado y guarda los cambios mediante
+     * el controlador correspondiente.
      */
     private void actualizarLibro() {
 
@@ -282,6 +291,10 @@ public class EditarLibro extends JDialog {
         }
     }
 
+    /**
+     * Solicita confirmación al usuario antes de cancelar
+     * la edición y cerrar la ventana sin guardar los cambios.
+     */
     private void cancelar() {
 
         int respuesta =

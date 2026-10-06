@@ -13,7 +13,7 @@ import java.util.List;
  * DAO encargado de ejecutar las consultas relacionadas
  * con los reportes de la biblioteca.
  *
- * @author Cristian Contreras
+ * @author Cristian Contreras Child
  * @version 1.0
  */
 public class ReporteDAO {
@@ -72,7 +72,13 @@ public class ReporteDAO {
         return resultados;
     }
 
-
+    /**
+     * Obtiene el historial de préstamos de un estudiante.
+     *
+     * @param idEstudiante identificador del estudiante.
+     * @return lista con los préstamos realizados por el estudiante.
+     * @throws SQLException si ocurre un error con la base de datos.
+     */
     public List<String[]> historialEstudiante(
             int idEstudiante) throws SQLException {
 
@@ -136,7 +142,14 @@ public class ReporteDAO {
         return resultados;
     }
 
-    
+    /**
+     * Obtiene los libros que actualmente se encuentran
+     * en préstamo y aún no han sido devueltos.
+     *
+     * @return lista con los estudiantes, libros y fechas
+     *         correspondientes a los préstamos activos.
+     * @throws SQLException si ocurre un error con la base de datos.
+     */
     public List<String[]> librosActualmenteEnPrestamo()
             throws SQLException {
 
@@ -195,5 +208,4 @@ public class ReporteDAO {
 
         return resultados;
     }
-
 }

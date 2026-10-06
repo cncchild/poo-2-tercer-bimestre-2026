@@ -1,4 +1,5 @@
 package cl.bibliotecaEFT.dao;
+
 import cl.bibliotecaEFT.conexion.DatabaseConnection;
 import cl.bibliotecaEFT.modelo.Estudiante;
 
@@ -12,11 +13,18 @@ import java.util.List;
 /**
  * DAO encargado de gestionar las operaciones de la tabla estudiantes.
  *
- * @author Cristian Contreras
+ * @author Cristian Contreras Child
  * @version 1.0
  */
 public class EstudianteDAO {
 
+    /**
+     * Guarda un nuevo estudiante en la base de datos.
+     *
+     * @param estudiante estudiante que se desea guardar.
+     * @throws SQLException si ocurre un error al ejecutar la operación
+     *                      en la base de datos.
+     */
     public void guardar(Estudiante estudiante) throws SQLException {
 
         String sql = """
@@ -33,10 +41,21 @@ public class EstudianteDAO {
             ps.setString(3, estudiante.getCurso());
             ps.setString(4, estudiante.getCorreo());
 
-            ps.executeUpdate();
+            int filasAfectadas = ps.executeUpdate();
+
+            System.out.println(
+                    "Estudiante guardado. Filas afectadas: "
+                            + filasAfectadas
+            );
         }
     }
 
+    /**
+     * Obtiene todos los estudiantes registrados.
+     *
+     * @return lista con todos los estudiantes registrados.
+     * @throws SQLException si ocurre un error al consultar la base de datos.
+     */
     public List<Estudiante> listarTodos() throws SQLException {
 
         List<Estudiante> estudiantes = new ArrayList<>();
@@ -67,6 +86,13 @@ public class EstudianteDAO {
         return estudiantes;
     }
 
+    /**
+     * Busca un estudiante por su identificador.
+     *
+     * @param id identificador del estudiante.
+     * @return estudiante encontrado o null si no existe.
+     * @throws SQLException si ocurre un error al consultar la base de datos.
+     */
     public Estudiante buscarPorId(int id) throws SQLException {
 
         String sql = """
@@ -100,6 +126,13 @@ public class EstudianteDAO {
         return null;
     }
 
+    /**
+     * Actualiza los datos de un estudiante existente.
+     *
+     * @param estudiante estudiante con los datos actualizados.
+     * @throws SQLException si ocurre un error al actualizar
+     *                      la información en la base de datos.
+     */
     public void actualizar(Estudiante estudiante) throws SQLException {
 
         String sql = """
@@ -121,6 +154,13 @@ public class EstudianteDAO {
         }
     }
 
+    /**
+     * Elimina un estudiante utilizando su identificador.
+     *
+     * @param id identificador del estudiante que se desea eliminar.
+     * @throws SQLException si ocurre un error al eliminar el estudiante
+     *                      o si tiene préstamos asociados.
+     */
     public void eliminar(int id) throws SQLException {
 
         String sql = """
@@ -146,6 +186,4 @@ public class EstudianteDAO {
             throw e;
         }
     }
-
-
 }

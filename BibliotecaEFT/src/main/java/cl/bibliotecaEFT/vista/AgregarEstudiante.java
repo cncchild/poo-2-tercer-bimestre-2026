@@ -10,7 +10,7 @@ import java.awt.*;
 /**
  * Ventana para registrar un nuevo estudiante.
  *
- * @author Cristian Contreras
+ * @author Cristian Contreras Child
  * @version 1.0
  */
 public class AgregarEstudiante extends JDialog {
@@ -22,6 +22,12 @@ public class AgregarEstudiante extends JDialog {
 
     private final EstudianteController estudianteController;
 
+    /**
+     * Constructor de la ventana de registro de estudiantes.
+     *
+     * @param ventana ventana principal utilizada para posicionar
+     *                el diálogo.
+     */
     public AgregarEstudiante(JFrame ventana) {
 
         EstudianteDAO estudianteDAO =
@@ -36,6 +42,13 @@ public class AgregarEstudiante extends JDialog {
         inicializarComponentes();
     }
 
+    /**
+     * Configura las propiedades principales de la ventana,
+     * como título, tamaño, posición y modalidad.
+     *
+     * @param ventana ventana principal utilizada como referencia
+     *                para posicionar el diálogo.
+     */
     private void inicializarVentana(JFrame ventana) {
 
         setTitle("BibliotecaEFT - Agregar estudiante");
@@ -45,6 +58,10 @@ public class AgregarEstudiante extends JDialog {
         setResizable(false);
     }
 
+    /**
+     * Inicializa los componentes gráficos de la ventana,
+     * incluyendo campos de texto, etiquetas y botones.
+     */
     private void inicializarComponentes() {
 
         JPanel panel = new JPanel(
@@ -113,6 +130,10 @@ public class AgregarEstudiante extends JDialog {
         add(panel);
     }
 
+    /**
+     * Valida los datos ingresados y registra un nuevo estudiante
+     * mediante el controlador correspondiente.
+     */
     private void guardarEstudiante() {
 
         String nombre =
@@ -177,6 +198,11 @@ public class AgregarEstudiante extends JDialog {
             );
         }
     }
+
+    /**
+     * Solicita confirmación al usuario antes de cancelar
+     * el registro y cerrar la ventana.
+     */
     private void cancelar() {
 
         int respuesta =

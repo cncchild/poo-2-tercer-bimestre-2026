@@ -21,7 +21,7 @@ import java.util.List;
 /**
  * Ventana modal para registrar un nuevo préstamo.
  *
- * @author Cristian Contreras
+ * @author Cristian Contreras Child
  * @version 1.0
  */
 public class AgregarPrestamo extends JDialog {
@@ -35,6 +35,11 @@ public class AgregarPrestamo extends JDialog {
     private final LibroController libroController;
     private final PrestamoController prestamoController;
 
+    /**
+     * Constructor de la ventana de registro de préstamos.
+     *
+     * @param parent ventana principal desde donde se abre el diálogo.
+     */
     public AgregarPrestamo(JFrame parent) {
 
         super(parent, "Registrar préstamo", true);
@@ -56,6 +61,10 @@ public class AgregarPrestamo extends JDialog {
         cargarDatos();
     }
 
+    /**
+     * Configura las propiedades principales de la ventana,
+     * incluyendo tamaño, posición y comportamiento.
+     */
     private void inicializarVentana() {
 
         setSize(450, 300);
@@ -63,6 +72,10 @@ public class AgregarPrestamo extends JDialog {
         setResizable(false);
     }
 
+    /**
+     * Inicializa y organiza los componentes gráficos de la ventana,
+     * incluyendo los selectores, campos de fecha y botones.
+     */
     private void inicializarComponentes() {
 
         JPanel panel = new JPanel(new GridLayout(5, 2, 10, 10));
@@ -105,6 +118,10 @@ public class AgregarPrestamo extends JDialog {
         add(panel);
     }
 
+    /**
+     * Carga desde la base de datos los estudiantes y libros
+     * disponibles para realizar un préstamo.
+     */
     private void cargarDatos() {
 
         try {
@@ -135,6 +152,10 @@ public class AgregarPrestamo extends JDialog {
         }
     }
 
+    /**
+     * Valida los datos seleccionados, calcula la fecha de devolución
+     * y crea una tarea para procesar el préstamo mediante un hilo.
+     */
     private void registrarPrestamo() {
 
         Estudiante estudiante =
@@ -247,6 +268,11 @@ public class AgregarPrestamo extends JDialog {
             );
         }
     }
+
+    /**
+     * Solicita confirmación al usuario antes de cancelar
+     * el registro del préstamo y cerrar la ventana.
+     */
     private void cancelar() {
 
         int respuesta =

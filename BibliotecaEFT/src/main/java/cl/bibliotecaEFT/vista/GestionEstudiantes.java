@@ -10,10 +10,13 @@ import java.awt.*;
 import java.util.List;
 
 /**
- * Ventana para gestionar los estudiantes
+ * Ventana principal para gestionar los estudiantes
  * registrados en el sistema de biblioteca.
  *
- * @author Cristian Contreras
+ * <p>Permite listar, agregar, editar y eliminar estudiantes,
+ * además de actualizar la información mostrada en la tabla.</p>
+ *
+ * @author Cristian Contreras Child
  * @version 1.0
  */
 public class GestionEstudiantes extends JFrame {
@@ -23,6 +26,11 @@ public class GestionEstudiantes extends JFrame {
 
     private final EstudianteController estudianteController;
 
+    /**
+     * Constructor de la ventana de gestión de estudiantes.
+     * Inicializa el controlador, la ventana, sus componentes
+     * y carga los estudiantes registrados.
+     */
     public GestionEstudiantes() {
 
         EstudianteDAO estudianteDAO = new EstudianteDAO();
@@ -35,6 +43,11 @@ public class GestionEstudiantes extends JFrame {
         cargarEstudiantes();
     }
 
+    /**
+     * Configura las propiedades principales de la ventana,
+     * incluyendo título, tamaño, comportamiento de cierre
+     * y posición en pantalla.
+     */
     private void inicializarVentana() {
 
         setTitle("BibliotecaEFT - Gestión de estudiantes");
@@ -43,6 +56,10 @@ public class GestionEstudiantes extends JFrame {
         setLocationRelativeTo(null);
     }
 
+    /**
+     * Inicializa la tabla, botones y componentes gráficos
+     * utilizados para gestionar los estudiantes.
+     */
     private void inicializarComponentes() {
 
         modeloTabla = new DefaultTableModel(
@@ -117,6 +134,10 @@ public class GestionEstudiantes extends JFrame {
         );
     }
 
+    /**
+     * Consulta los estudiantes registrados mediante el controlador
+     * y actualiza la información mostrada en la tabla.
+     */
     private void cargarEstudiantes() {
 
         try {
@@ -152,6 +173,10 @@ public class GestionEstudiantes extends JFrame {
         }
     }
 
+    /**
+     * Abre la ventana para registrar un nuevo estudiante
+     * y actualiza la tabla una vez cerrada dicha ventana.
+     */
     private void abrirAgregarEstudiante() {
 
         AgregarEstudiante ventana =
@@ -162,6 +187,11 @@ public class GestionEstudiantes extends JFrame {
         cargarEstudiantes();
     }
 
+    /**
+     * Obtiene el estudiante seleccionado en la tabla,
+     * abre la ventana de edición y actualiza la tabla
+     * después de cerrar el formulario.
+     */
     private void editarEstudianteSeleccionado() {
 
         int fila =
@@ -224,6 +254,10 @@ public class GestionEstudiantes extends JFrame {
         }
     }
 
+    /**
+     * Obtiene el estudiante seleccionado, solicita confirmación
+     * y elimina el registro mediante el controlador.
+     */
     private void eliminarEstudianteSeleccionado() {
 
         int fila =
@@ -294,6 +328,10 @@ public class GestionEstudiantes extends JFrame {
         }
     }
 
+    /**
+     * Solicita confirmación al usuario antes de cerrar
+     * la ventana y volver al menú principal.
+     */
     private void volverAlHome() {
 
         int respuesta =

@@ -12,7 +12,7 @@ import java.util.List;
  * Controlador encargado de gestionar las operaciones
  * relacionadas con los libros de la biblioteca.
  *
- * @author Cristian Contreras
+ * @author Cristian Contreras Child
  * @version 1.0
  */
 public class LibroController {
@@ -91,17 +91,30 @@ public class LibroController {
     public List<Categoria> listarCategorias() throws SQLException {
         return categoriaDAO.listarTodos();
     }
+
+    /**
+     * Disminuye en una unidad el stock de un libro.
+     *
+     * @param idLibro identificador del libro.
+     * @return true si el stock fue disminuido correctamente,
+     *         false si no hay stock disponible.
+     * @throws SQLException si ocurre un error con la base de datos.
+     */
     public boolean disminuirStock(int idLibro)
             throws SQLException {
 
         return libroDAO.disminuirStock(idLibro);
     }
 
-
+    /**
+     * Aumenta en una unidad el stock de un libro.
+     *
+     * @param idLibro identificador del libro.
+     * @throws SQLException si ocurre un error con la base de datos.
+     */
     public void aumentarStock(int idLibro)
             throws SQLException {
 
         libroDAO.aumentarStock(idLibro);
     }
-
 }

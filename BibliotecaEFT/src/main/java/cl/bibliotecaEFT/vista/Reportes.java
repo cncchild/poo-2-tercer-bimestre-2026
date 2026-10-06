@@ -11,7 +11,10 @@ import java.util.List;
 /**
  * Ventana principal de reportes del sistema.
  *
- * @author Cristian Contreras
+ * Permite consultar los libros más prestados, el historial de
+ * préstamos de un estudiante y los préstamos actualmente activos.
+ *
+ * @author Cristian Contreras Child
  * @version 1.0
  */
 public class Reportes extends JFrame {
@@ -21,6 +24,12 @@ public class Reportes extends JFrame {
 
     private final ReporteDAO reporteDAO;
 
+    /**
+     * Constructor de la ventana de reportes.
+     *
+     * Inicializa el DAO de reportes, la configuración de la ventana
+     * y sus componentes gráficos.
+     */
     public Reportes() {
 
         reporteDAO = new ReporteDAO();
@@ -29,6 +38,9 @@ public class Reportes extends JFrame {
         inicializarComponentes();
     }
 
+    /**
+     * Configura las propiedades principales de la ventana.
+     */
     private void inicializarVentana() {
 
         setTitle("BibliotecaEFT - Reportes");
@@ -41,6 +53,12 @@ public class Reportes extends JFrame {
         setLocationRelativeTo(null);
     }
 
+    /**
+     * Inicializa y organiza los componentes gráficos de la ventana.
+     *
+     * Configura los botones de consulta, la tabla de resultados
+     * y sus respectivos eventos.
+     */
     private void inicializarComponentes() {
 
         JPanel panelSuperior =
@@ -129,7 +147,6 @@ public class Reportes extends JFrame {
                 e -> seleccionarEstudiante()
         );
 
-
         btnPrestamosActuales.addActionListener(
                 e -> cargarPrestamosActuales()
         );
@@ -137,9 +154,14 @@ public class Reportes extends JFrame {
         btnCerrar.addActionListener(
                 e -> volverAlHome()
         );
-
     }
 
+    /**
+     * Carga en la tabla el reporte de los libros más prestados.
+     *
+     * Consulta la información mediante ReporteDAO y muestra
+     * el libro junto con la cantidad de préstamos registrados.
+     */
     private void cargarLibrosMasPrestados() {
 
         try {
@@ -171,6 +193,12 @@ public class Reportes extends JFrame {
         }
     }
 
+    /**
+     * Permite seleccionar un estudiante para consultar su historial.
+     *
+     * Obtiene los estudiantes registrados y los muestra en un
+     * componente de selección.
+     */
     private void seleccionarEstudiante() {
 
         try {
@@ -235,6 +263,11 @@ public class Reportes extends JFrame {
         }
     }
 
+    /**
+     * Carga el historial de préstamos de un estudiante seleccionado.
+     *
+     * @param estudiante estudiante cuyo historial será consultado
+     */
     private void cargarHistorialEstudiante(
             Estudiante estudiante) {
 
@@ -291,6 +324,13 @@ public class Reportes extends JFrame {
             );
         }
     }
+
+    /**
+     * Carga los libros que actualmente se encuentran en préstamo.
+     *
+     * Muestra el estudiante, libro y las fechas asociadas
+     * al préstamo.
+     */
     private void cargarPrestamosActuales() {
 
         try {
@@ -342,6 +382,7 @@ public class Reportes extends JFrame {
             );
         }
     }
+
     /**
      * Solicita confirmación antes de volver al menú principal.
      */

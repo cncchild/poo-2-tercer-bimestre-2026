@@ -13,11 +13,18 @@ import java.util.List;
 /**
  * DAO encargado de gestionar las operaciones de la tabla categorias.
  *
- * @author Cristian Contreras
+ * @author Cristian Contreras Child
  * @version 1.0
  */
 public class CategoriaDAO {
 
+    /**
+     * Guarda una nueva categoría en la base de datos.
+     *
+     * @param categoria categoría que se desea guardar.
+     * @throws SQLException si ocurre un error al ejecutar la operación
+     *                      en la base de datos.
+     */
     public void guardar(Categoria categoria) throws SQLException {
 
         String sql = "INSERT INTO categorias (nombre) VALUES (?)";
@@ -30,6 +37,12 @@ public class CategoriaDAO {
         }
     }
 
+    /**
+     * Obtiene todas las categorías registradas en la base de datos.
+     *
+     * @return lista con todas las categorías registradas.
+     * @throws SQLException si ocurre un error al consultar la base de datos.
+     */
     public List<Categoria> listarTodos() throws SQLException {
 
         List<Categoria> categorias = new ArrayList<>();

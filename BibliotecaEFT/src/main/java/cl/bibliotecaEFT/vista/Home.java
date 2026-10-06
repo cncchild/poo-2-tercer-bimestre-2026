@@ -8,7 +8,10 @@ import java.awt.*;
 /**
  * Ventana principal del sistema de biblioteca.
  *
- * @author Cristian Contreras
+ * Permite acceder a las funcionalidades disponibles según
+ * el rol del usuario que inició sesión.
+ *
+ * @author Cristian Contreras Child
  * @version 1.0
  */
 public class Home extends JFrame {
@@ -41,7 +44,10 @@ public class Home extends JFrame {
     }
 
     /**
-     * Crea y organiza los componentes gráficos.
+     * Crea y organiza los componentes gráficos de la ventana.
+     *
+     * Las opciones disponibles se determinan según el rol
+     * del usuario autenticado.
      */
     private void inicializarComponentes() {
 
@@ -137,6 +143,9 @@ public class Home extends JFrame {
 
     /**
      * Solicita confirmación antes de cerrar la sesión.
+     *
+     * Al confirmar, cierra la ventana principal y
+     * vuelve a mostrar la ventana de inicio de sesión.
      */
     private void cerrarSesion() {
 

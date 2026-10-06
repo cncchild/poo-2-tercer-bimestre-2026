@@ -18,9 +18,10 @@ import java.time.LocalDate;
 import java.util.List;
 
 /**
- * Ventana para gestionar los préstamos de la biblioteca.
+ * Ventana para gestionar los préstamos registrados
+ * en el sistema de biblioteca.
  *
- * @author Cristian Contreras
+ * @author Cristian Contreras Child
  * @version 1.0
  */
 public class GestionPrestamos extends JFrame {
@@ -32,6 +33,11 @@ public class GestionPrestamos extends JFrame {
     private final EstudianteController estudianteController;
     private final LibroController libroController;
 
+    /**
+     * Constructor de la ventana de gestión de préstamos.
+     * Inicializa los controladores, la ventana, sus componentes
+     * y carga los préstamos registrados.
+     */
     public GestionPrestamos() {
 
         PrestamoDAO prestamoDAO =
@@ -67,6 +73,10 @@ public class GestionPrestamos extends JFrame {
         cargarPrestamos();
     }
 
+    /**
+     * Configura las propiedades principales de la ventana,
+     * incluyendo título, tamaño, cierre y posición.
+     */
     private void inicializarVentana() {
 
         setTitle(
@@ -82,6 +92,10 @@ public class GestionPrestamos extends JFrame {
         setLocationRelativeTo(null);
     }
 
+    /**
+     * Inicializa y organiza los componentes gráficos
+     * utilizados para gestionar los préstamos.
+     */
     private void inicializarComponentes() {
 
         modeloTabla =
@@ -158,6 +172,10 @@ public class GestionPrestamos extends JFrame {
         );
     }
 
+    /**
+     * Consulta los préstamos registrados mediante el controlador
+     * y actualiza la información mostrada en la tabla.
+     */
     private void cargarPrestamos() {
 
         try {
@@ -210,6 +228,13 @@ public class GestionPrestamos extends JFrame {
         }
     }
 
+    /**
+     * Busca un estudiante por su identificador y obtiene su nombre.
+     *
+     * @param idEstudiante identificador del estudiante.
+     * @return nombre del estudiante o un mensaje si no existe.
+     * @throws Exception si ocurre un error durante la consulta.
+     */
     private String obtenerNombreEstudiante(
             int idEstudiante) throws Exception {
 
@@ -225,6 +250,13 @@ public class GestionPrestamos extends JFrame {
         return estudiante.getNombre();
     }
 
+    /**
+     * Busca un libro por su identificador y obtiene su título.
+     *
+     * @param idLibro identificador del libro.
+     * @return título del libro o un mensaje si no existe.
+     * @throws Exception si ocurre un error durante la consulta.
+     */
     private String obtenerTituloLibro(
             int idLibro) throws Exception {
 
@@ -240,6 +272,14 @@ public class GestionPrestamos extends JFrame {
         return libro.getTitulo();
     }
 
+    /**
+     * Determina el estado actual de un préstamo según
+     * su fecha de devolución y la fecha actual.
+     *
+     * @param prestamo préstamo que será evaluado.
+     * @return "Atrasado" si la fecha de devolución ya pasó;
+     *         en caso contrario, "Prestado".
+     */
     private String obtenerEstadoPrestamo(
             Prestamo prestamo) {
 
@@ -257,6 +297,10 @@ public class GestionPrestamos extends JFrame {
         return "Prestado";
     }
 
+    /**
+     * Abre la ventana para registrar un nuevo préstamo
+     * y actualiza la tabla después de cerrar el formulario.
+     */
     private void abrirAgregarPrestamo() {
 
         AgregarPrestamo ventana =
@@ -267,6 +311,11 @@ public class GestionPrestamos extends JFrame {
         cargarPrestamos();
     }
 
+    /**
+     * Obtiene el préstamo seleccionado, solicita confirmación
+     * y registra su devolución. También actualiza el stock
+     * del libro correspondiente.
+     */
     private void registrarDevolucion() {
 
         int filaSeleccionada =
@@ -368,6 +417,10 @@ public class GestionPrestamos extends JFrame {
         }
     }
 
+    /**
+     * Solicita confirmación al usuario antes de cerrar
+     * la ventana y volver al menú principal.
+     */
     private void volverAlHome() {
 
         int respuesta =
@@ -385,6 +438,12 @@ public class GestionPrestamos extends JFrame {
 
         dispose();
     }
+
+    /**
+     * Elimina el préstamo seleccionado después de solicitar
+     * confirmación al usuario y actualiza el stock del libro
+     * cuando el préstamo aún no ha sido devuelto.
+     */
     private void eliminarPrestamo() {
 
         int filaSeleccionada =
@@ -475,5 +534,4 @@ public class GestionPrestamos extends JFrame {
             );
         }
     }
-
 }

@@ -10,7 +10,10 @@ import java.awt.*;
 /**
  * Ventana de inicio de sesión del sistema de biblioteca.
  *
- * @author Cristian Contreras
+ * Permite ingresar las credenciales de un usuario y validar
+ * su acceso mediante el RUT y la contraseña registrados.
+ *
+ * @author Cristian Contreras Child
  * @version 1.0
  */
 public class Login extends JFrame {
@@ -23,6 +26,9 @@ public class Login extends JFrame {
 
     /**
      * Constructor de la ventana de inicio de sesión.
+     *
+     * Inicializa el controlador de usuarios y los componentes
+     * gráficos de la ventana.
      */
     public Login() {
 
@@ -47,7 +53,8 @@ public class Login extends JFrame {
     }
 
     /**
-     * Crea y organiza los componentes gráficos.
+     * Crea y organiza los componentes gráficos
+     * de la ventana de inicio de sesión.
      */
     private void inicializarComponentes() {
 
@@ -112,6 +119,12 @@ public class Login extends JFrame {
 
     /**
      * Valida las credenciales ingresadas por el usuario.
+     *
+     * Busca al usuario mediante su RUT y compara la contraseña
+     * ingresada con la registrada en la base de datos.
+     *
+     * @throws Exception si ocurre un error durante la consulta
+     *                   o validación del usuario
      */
     private void iniciarSesion() {
 

@@ -13,11 +13,18 @@ import java.util.List;
 /**
  * DAO encargado de gestionar las operaciones de la tabla prestamos.
  *
- * @author Cristian Contreras
+ * @author Cristian Contreras Child
  * @version 1.0
  */
 public class PrestamoDAO {
 
+    /**
+     * Guarda un nuevo préstamo en la base de datos.
+     *
+     * @param prestamo préstamo que se desea registrar.
+     * @throws SQLException si ocurre un error al insertar el préstamo
+     *                      en la base de datos.
+     */
     public void guardar(Prestamo prestamo) throws SQLException {
 
         String sql = """
@@ -48,6 +55,12 @@ public class PrestamoDAO {
         }
     }
 
+    /**
+     * Obtiene todos los préstamos registrados.
+     *
+     * @return lista con todos los préstamos registrados.
+     * @throws SQLException si ocurre un error al consultar la base de datos.
+     */
     public List<Prestamo> listarTodos() throws SQLException {
 
         List<Prestamo> prestamos = new ArrayList<>();
@@ -91,6 +104,13 @@ public class PrestamoDAO {
         return prestamos;
     }
 
+    /**
+     * Busca un préstamo utilizando su identificador.
+     *
+     * @param id identificador del préstamo.
+     * @return préstamo encontrado o null si no existe.
+     * @throws SQLException si ocurre un error al consultar la base de datos.
+     */
     public Prestamo buscarPorId(int id) throws SQLException {
 
         String sql = """
@@ -137,6 +157,13 @@ public class PrestamoDAO {
         return null;
     }
 
+    /**
+     * Actualiza los datos de un préstamo existente.
+     *
+     * @param prestamo préstamo con los datos actualizados.
+     * @throws SQLException si ocurre un error al actualizar el préstamo
+     *                      en la base de datos.
+     */
     public void actualizar(Prestamo prestamo) throws SQLException {
 
         String sql = """
@@ -172,6 +199,13 @@ public class PrestamoDAO {
         }
     }
 
+    /**
+     * Elimina un préstamo utilizando su identificador.
+     *
+     * @param id identificador del préstamo que se desea eliminar.
+     * @throws SQLException si ocurre un error al eliminar el préstamo
+     *                      de la base de datos.
+     */
     public void eliminar(int id) throws SQLException {
 
         String sql = "DELETE FROM prestamos WHERE id = ?";
